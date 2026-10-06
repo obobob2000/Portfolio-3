@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400&family=Space+Grotesk:wght@700&display=swap">
 <style>
-/* Layout: 1920px Figma desktop grid, scaled fluidly via --u (1 design px). Single light look by design. */
+/* Layout: 1920px Figma desktop grid, scaled fluidly via --u (1 design px). Light by default, dark via tokens below. */
 :root {
   color-scheme: light;
   --u: min(calc(100vw / 1920), 1px);
@@ -33,11 +33,63 @@
   --tile-sky: #eef6ff;
   --tile-cream: #fff8eb;
   --salut: #538bca;
+  --blue-deep: #0019b0;
+  --card: #ffffff;
+  --tile-phone: #ffffff;
+  --pill-bg: #000000;
+  --pill-ink: #ffffff;
+  --veil: rgba(255, 255, 255, .6);
+  --cover-ph: #dddddd;
+  --cover-shadow: rgba(46, 28, 0, .16);
+  --photo-shadow: rgba(30, 70, 130, .12);
   --font-ui: "Akkurat LL", "Akkurat", "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
   --gutter: calc(80 * var(--u));
   --gap: calc(60 * var(--u));
   --radius: calc(60 * var(--u));
+}
+/* Dark mode: follows the system unless the visitor picked a theme with the switch in the header (data-theme on <html>) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0d0d11;
+    --ink-muted: #a6a6ad;
+    --line: #2b2b33;
+    --blue: #5b78ff;
+    --blue-deep: #2f49d8;
+    --tile-grey: #18181d;
+    --tile-sky: #111a27;
+    --tile-cream: #1e1910;
+    --salut: #86b4ec;
+    --card: #15151a;
+    --tile-phone: #15151a;
+    --pill-bg: #ffffff;
+    --pill-ink: #000000;
+    --veil: rgba(8, 8, 12, .62);
+    --cover-ph: #2a2a30;
+    --cover-shadow: rgba(0, 0, 0, .45);
+    --photo-shadow: rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d0d11;
+  --ink-muted: #a6a6ad;
+  --line: #2b2b33;
+  --blue: #5b78ff;
+  --blue-deep: #2f49d8;
+  --tile-grey: #18181d;
+  --tile-sky: #111a27;
+  --tile-cream: #1e1910;
+  --salut: #86b4ec;
+  --card: #15151a;
+  --tile-phone: #15151a;
+  --pill-bg: #ffffff;
+  --pill-ink: #000000;
+  --veil: rgba(8, 8, 12, .62);
+  --cover-ph: #2a2a30;
+  --cover-shadow: rgba(0, 0, 0, .45);
+  --photo-shadow: rgba(0, 0, 0, .35);
 }
 * { box-sizing: border-box; }
 html, body { background: var(--bg); }
@@ -77,6 +129,21 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .smile__face { opacity: 0; transform: scale(.4) rotate(-40deg); color: var(--blue); }
 .smile.is-smiling .smile__word { opacity: 0; transform: scale(.6); }
 .smile.is-smiling .smile__face { opacity: 1; transform: scale(1.15) rotate(0deg); }
+/* Theme switch: a round outlined button next to Kontakt (same height as the pill); a sun whose rays pull in while a second circle carves it into a moon */
+.theme { box-sizing: content-box; position: relative; width: 13.3px; height: 13.3px; padding: calc(10 * var(--u)); flex: none; background: none; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.theme svg { position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; display: block; overflow: visible; transition: transform .6s cubic-bezier(.3,1.4,.5,1); }
+.theme__rays { transform-box: fill-box; transform-origin: center; transition: transform .45s cubic-bezier(.3,1.4,.5,1), opacity .25s ease; }
+.theme__cut { transition: transform .45s cubic-bezier(.3,1,.4,1); }
+.theme__orb { transform-box: view-box; transform-origin: 12px 12px; transition: transform .45s cubic-bezier(.3,1.4,.5,1); }
+.theme:hover svg { transform: rotate(30deg); }
+:root[data-theme="dark"] .theme svg { transform: rotate(-20deg); }
+:root[data-theme="dark"] .theme:hover svg { transform: rotate(-50deg); }
+:root[data-theme="dark"] .theme__rays { transform: scale(.4) rotate(45deg); opacity: 0; }
+:root[data-theme="dark"] .theme__cut { transform: translate(-9.5px, 5.5px); }
+:root[data-theme="dark"] .theme__orb { transform: scale(1.5); }
+/* switching themes: the new look cross-fades over the old one (View Transitions); elsewhere colours simply fade */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+.theme-fade, .theme-fade * { transition: background-color .4s ease, border-color .4s ease, color .4s ease, fill .4s ease, stroke .4s ease !important; }
 
 .bar {
   position: relative; height: calc(176 * var(--u));
@@ -98,7 +165,7 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .star--3d:hover { rotate: none; }
 .star3d { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d;
   animation: star-spin 6s linear infinite; }
-.star3d svg { position: absolute; inset: 0; color: #0019b0;
+.star3d svg { position: absolute; inset: 0; color: var(--blue-deep);
   transform: translateZ(calc((var(--i) - 7.5) * 0.48 * var(--u))); backface-visibility: visible; }
 .star3d svg.face { color: var(--blue); }
 .star--3d:hover .star3d { animation-duration: 2.4s; }
@@ -135,10 +202,11 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .kz-icon svg { position: absolute; left: 26.36%; top: 33.33%; width: 46.78%; height: auto; display: block; pointer-events: none; }
 
 /* Kadenz prototype: plays by itself inside an iframe; the black rounded box is the phone outline while it loads */
-.kz-frame { aspect-ratio: 418 / 872; height: auto; border: 0; display: block; background: #000; border-radius: 12.92% / 6.19%; }
+/* color-scheme matches the embedded page (always light): otherwise a dark host page gives the iframe an opaque white backdrop */
+.kz-frame { aspect-ratio: 418 / 872; height: auto; border: 0; display: block; background: #000; border-radius: 12.92% / 6.19%; color-scheme: light; }
 /* once the prototype has loaded it draws the phone itself; the black box underneath would show as a hairline at the edge */
 .kz-frame.is-ready { background: transparent; border-radius: 0; }
-.tile--phone { background: var(--bg); }
+.tile--phone { background: var(--tile-phone); }
 .tile--phone .kz-frame { width: calc(227.3 * var(--u)); pointer-events: none; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
 .tile__hit { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; border-radius: inherit; background: none; font: inherit; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
 .tile__hit:focus-visible { outline: 2px solid var(--blue); outline-offset: -4px; }
@@ -147,24 +215,35 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
    circle and run out of the tile. Every click turns the wheel one cover further; the name below opens the cover large. */
 .tile--covers { background: var(--tile-cream); overflow: clip; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .cover { position: absolute; left: 50%; top: calc(123 * var(--u)); width: calc(208 * var(--u)); aspect-ratio: 1 / 1; margin-left: calc(-104 * var(--u));
-  padding: 0; border: 0; border-radius: 10px; overflow: hidden; background: #ddd; font: inherit; cursor: pointer;
-  box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(46, 28, 0, .16); will-change: transform; -webkit-tap-highlight-color: transparent; }
+  padding: 0; border: 0; border-radius: 10px; overflow: hidden; background: var(--cover-ph); font: inherit; cursor: pointer;
+  box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) var(--cover-shadow); will-change: transform; -webkit-tap-highlight-color: transparent; }
 .cover img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
 .cover:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.covers__name { position: absolute; left: 50%; top: calc(366 * var(--u)); translate: -50% 0; margin: 0; padding: 6px 12px; border: 1px solid #000; border-radius: 999px;
-  background: #000; font: inherit; font-size: 14px; line-height: .95; color: #fff; white-space: nowrap; cursor: zoom-in; z-index: 20;
-  transition: opacity .2s ease, background-color .2s ease, border-color .2s ease; }
-.covers__name:hover { background: #2a2a2a; border-color: #2a2a2a; }
+.covers__name { position: absolute; left: 50%; top: calc(366 * var(--u)); translate: -50% 0; margin: 0; padding: 6px 12px; border: 1px solid var(--pill-bg); border-radius: 999px;
+  background: var(--pill-bg); font: inherit; font-size: 14px; line-height: .95; color: var(--pill-ink); text-decoration: none; white-space: nowrap; cursor: pointer; z-index: 20;
+  transition: opacity .2s ease; }
+.covers__name { display: inline-flex; align-items: center; }
+/* Hover: ein Pfeil nach rechts oben schiebt sich in die Pille – der Link führt aus der Seite hinaus */
+.covers__arrow { display: inline-flex; flex: none; width: 0; margin-left: 0; overflow: hidden;
+  transition: width .28s cubic-bezier(.22,.9,.3,1), margin-left .28s cubic-bezier(.22,.9,.3,1); }
+.covers__arrow svg { flex: none; width: 10px; height: 10px; display: block; opacity: 0; transform: translate(-7px, 7px);
+  transition: transform .32s cubic-bezier(.22,.9,.3,1), opacity .2s ease; }
+.covers__name:hover .covers__arrow, .covers__name:focus-visible .covers__arrow { width: 10px; margin-left: 6px; }
+.covers__name:hover .covers__arrow svg, .covers__name:focus-visible .covers__arrow svg { opacity: 1; transform: none; }
+.covers__name:active .covers__arrow svg { transform: translate(2px, -2px); }
+@media (hover: none) {
+  .covers__arrow { width: 10px; margin-left: 6px; }
+  .covers__arrow svg { opacity: 1; transform: none; }
+}
 .covers__name:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 .covers__name.is-changing { opacity: 0; }
-.modal--cover .modal__cover { width: calc(620 * var(--m)); height: auto; aspect-ratio: 1 / 1; object-fit: cover; display: block; border-radius: 10px; }
 
 .tile--salut { background: var(--tile-sky); flex-direction: column; gap: calc(30 * var(--u)); }
 .photos { position: relative; width: calc(295.33 * var(--u)); aspect-ratio: 231 / 256.4; max-width: 100%;
   padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .photos:focus-visible { outline: 2px solid var(--salut); outline-offset: 8px; border-radius: 8px; }
 .photo { position: absolute; height: auto; display: block; user-select: none; -webkit-user-drag: none;
-  filter: drop-shadow(0 calc(6 * var(--u)) calc(14 * var(--u)) rgba(30, 70, 130, .12)); }
+  filter: drop-shadow(0 calc(6 * var(--u)) calc(14 * var(--u)) var(--photo-shadow)); }
 .photo--ride { left: 13.86%; top: 0; width: 86.14%; }
 .photo--portrait { left: 0; top: 7.4%; width: 89.87%; }
 .photo.is-front { z-index: 2; }
@@ -180,14 +259,14 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
   visibility: hidden; opacity: 0; transition: opacity .3s ease, visibility 0s linear .3s; }
 .modal.is-open { visibility: visible; opacity: 1; transition: opacity .3s ease; }
-.modal__backdrop { position: absolute; inset: 0; background: rgba(255, 255, 255, .6);
+.modal__backdrop { position: absolute; inset: 0; background: var(--veil);
   -webkit-backdrop-filter: blur(27px); backdrop-filter: blur(27px); border: 0; padding: 0; cursor: zoom-out; }
 .modal__card {
   --m: min(1px, calc(100vw / 1920), calc(100vh / 1090));
   --m: min(1px, calc(100vw / 1920), calc(100dvh / 1090));
   --h: calc(1014 * var(--m)); --edge: max(36px, calc(52 * var(--m)));
   position: relative; width: calc(959.47 * var(--m)); height: var(--h); overflow: hidden;
-  border-radius: calc(102.56 * var(--m)); background: var(--bg);
+  border-radius: calc(102.56 * var(--m)); background: var(--card);
   transform: scale(.96) translateY(calc(16 * var(--m))); transition: transform .45s cubic-bezier(.2,.9,.25,1); }
 .modal.is-open .modal__card { transform: none; }
 /* The card keeps its size; phone + caption fill the first view, the screens follow in a 2-column grid when scrolling */
@@ -206,7 +285,7 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
   font-size: 14px; line-height: .95; color: var(--ink-muted); white-space: nowrap; }
 .modal__close, .modal__more { flex: none;
   width: max(32px, calc(36 * var(--m))); height: max(32px, calc(36 * var(--m)));
-  padding: 0; border: 0; background: var(--bg); border-radius: 50%; cursor: pointer; }
+  padding: 0; border: 0; background: var(--card); border-radius: 50%; cursor: pointer; }
 .modal__close { position: absolute; top: var(--edge); right: var(--edge); }
 .modal__more { transition: opacity .3s ease; }
 .modal__foot { display: flex; flex-direction: column; align-items: center; gap: 12px; }
@@ -219,6 +298,9 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 @media (prefers-reduced-motion: reduce) { .modal__card.is-hinting .modal__more { animation: none; } }
 .modal__card.is-scrolled .modal__more { opacity: 0; pointer-events: none; }
 .modal__close svg, .modal__more svg { width: 100%; height: 100%; display: block; }
+.modal__close svg rect, .modal__more svg rect { stroke: var(--line); }
+.modal__close svg path { fill: var(--ink-muted); }
+.modal__more svg path { stroke: var(--ink-muted); }
 .modal__close:hover svg rect, .modal__more:hover svg rect { stroke: var(--ink-muted); }
 .modal__close:focus-visible, .modal__more:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 body.has-modal { overflow: hidden; }
@@ -239,19 +321,21 @@ body.has-modal { overflow: hidden; }
   .pill--outline, .pill--wide { padding: 6px 12px; }
   .bar nav { gap: 6px; }
   .star { width: 20px; height: 20px; }
+  .theme { padding: 6px; }
+  .theme svg { width: 16px; height: 16px; margin: -8px 0 0 -8px; }
   /* Header: name | star | nav in a 3-column grid so nothing can overlap */
   .site-header { height: auto; min-height: 72px; padding-block: 14px; display: grid;
     grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 8px; }
   .site-header .star { position: static; translate: none; grid-column: 2; grid-row: 1; }
   .site-header #home { justify-self: start; padding-left: 0; }
   .site-header nav { grid-column: 3; justify-self: end; }
-  /* Footer: star on top, then Merci and links; links wrap on very small phones */
+  /* Footer: star on top, Merci and links centred in one row below; wraps centred on very small phones */
   .site-footer { height: auto; padding-block: 20px 24px; display: flex; flex-wrap: wrap;
-    justify-content: space-between; align-items: center; gap: 12px 8px; }
+    justify-content: center; align-items: center; gap: 12px 6px; }
   .site-footer .star { position: static; translate: none; order: -1; flex: 0 0 100%; height: 20px; }
   .site-footer .star svg { width: 20px; margin: 0 auto; }
-  .site-footer .merci { padding-left: 0; }
-  .site-footer nav { flex-wrap: wrap; justify-content: flex-end; }
+  .site-footer .merci { padding-left: 0; } /* no border: text edge counts for optical centring */
+  .site-footer nav { flex-wrap: wrap; justify-content: center; }
 }
 @media (max-width: 800px) {
   /* Mobile: the overlay stays a square card, like the tiles */
@@ -270,6 +354,7 @@ body.has-modal { overflow: hidden; }
 }
 @media (max-width: 360px) {
   .pill { padding-inline: 8px; }
+  .theme { padding: 6px; }
 }
 
 /* Hero colour drift: CSS gradients on composited layers (smooth, no per-frame filter work) */
@@ -297,6 +382,15 @@ body.has-modal { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
+<script>
+/* set the theme before first paint: the visitor's saved choice, otherwise the system setting */
+(() => {
+  let t = null;
+  try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.dataset.theme = t;
+})();
+</script>
 
 </head>
 <body>
@@ -308,6 +402,7 @@ body.has-modal { overflow: hidden; }
     <nav aria-label="Hauptnavigation">
       <a class="pill pill--plain smile" href="#laechel" id="smile" aria-label="Lächel"><span class="smile__word">Lächel</span><span class="smile__face" aria-hidden="true">:)</span></a>
       <a class="pill pill--outline" href="mailto:hallo@olivierbuetz.com" title="hallo@olivierbuetz.com">Kontakt</a>
+      <button class="pill pill--outline theme" type="button" id="theme" aria-label="Dunkles Design einschalten" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><mask id="theme-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><circle class="theme__cut" cx="26" cy="2" r="5.6" fill="#000"/></mask><g class="theme__orb"><circle cx="12" cy="12" r="5.2" fill="currentColor" mask="url(#theme-mask)"/></g><path class="theme__rays" d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M5.2 18.8l1.6-1.6M17.2 6.8l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </nav>
   </header>
 
@@ -334,17 +429,17 @@ body.has-modal { overflow: hidden; }
     </div>
     <div class="tile tile--image tile--zoom" style="background:#03035c"><img src="/assets/ring.webp" loading="lazy" decoding="async" alt="App-Icon mit weißem Ring auf blau-orangem Verlauf" width="547" height="550"></div>
     <div class="tile tile--covers" id="covers" role="group" aria-label="Meine Playlist-Cover">
-      <button class="cover" type="button" data-name="26"><img src="/assets/cover-26.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="20.25"><img src="/assets/cover-2025.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="twenty4"><img src="/assets/cover-2024.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="20 : 23"><img src="/assets/cover-2023.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="22."><img src="/assets/cover-2022.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="21 deuxun"><img src="/assets/cover-2021.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="2020 O.S.T"><img src="/assets/cover-2020.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="2019 Records"><img src="/assets/cover-2019.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="2018 Aue!"><img src="/assets/cover-2018.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="20-17"><img src="/assets/cover-2017.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="covers__name" id="covers-now" type="button" aria-label="Cover der Playlist „26“ groß ansehen">26</button>
+      <button class="cover" type="button" data-name="26" data-spotify="02HQHcOR1q0QLG8usMrByi"><img src="/assets/cover-26.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="20.25" data-spotify="7gbJLqvMXSqEjG7aJnRWSl"><img src="/assets/cover-2025.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="twenty4" data-spotify="3A6yu14ne17N7FLckNPbf6"><img src="/assets/cover-2024.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="20 : 23" data-spotify="4UvVh63YCRlTQtEvBScURJ"><img src="/assets/cover-2023.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="22." data-spotify="4UNiPquxtbgZtm6QqKa2it"><img src="/assets/cover-2022.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="21 deuxun" data-spotify="5g4bmPBBpv7jgCae2TIRfU"><img src="/assets/cover-2021.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="2020 O.S.T" data-spotify="7qGHs6tKpRZwKu6UNnaxpn"><img src="/assets/cover-2020.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="2019 Records" data-spotify="771KOJITsPvTl1qhdo2h3N"><img src="/assets/cover-2019.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="2018 Aue!" data-spotify="6V0zohnhdwJ4TvUhBu9u6i"><img src="/assets/cover-2018.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="20-17" data-spotify="6AQHyvQnkYqUlV5a7rcnO2"><img src="/assets/cover-2017.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <a class="covers__name" id="covers-now" href="https://open.spotify.com/playlist/02HQHcOR1q0QLG8usMrByi" target="_blank" rel="noopener" title="In Spotify öffnen" aria-label="Playlist „26“ in Spotify öffnen (neuer Tab)"><span class="covers__text">26</span><span class="covers__arrow" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 8 2M3.4 2H8v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
     </div>
 
     <div class="tile tile--image"><img src="/assets/shadow.webp" loading="lazy" decoding="async" alt="Schatten eines Radfahrers im Abendlicht" width="547" height="550"></div>
@@ -385,17 +480,50 @@ body.has-modal { overflow: hidden; }
   </div>
 </div>
 
-<div class="modal modal--cover" id="cover-modal" role="dialog" aria-modal="true" aria-labelledby="cover-caption" aria-hidden="true">
-  <button class="modal__backdrop" type="button" tabindex="-1" aria-label="Schließen" data-close></button>
-  <div class="modal__card">
-    <div class="modal__hero">
-      <img class="modal__cover" alt="" width="480" height="480">
-      <p class="modal__caption" id="cover-caption"></p>
-    </div>
-    <button class="modal__close" type="button" aria-label="Schließen" data-close><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="0.5" y="0.5" width="35" height="35" rx="17.5" stroke="#D9D9D9"/><path fill-rule="evenodd" clip-rule="evenodd" d="M19.1783 17.9999L22.7133 14.4649C22.791 14.3876 22.8526 14.2957 22.8947 14.1945C22.9368 14.0933 22.9584 13.9849 22.9584 13.8753C22.9584 13.7657 22.9368 13.6572 22.8947 13.556C22.8526 13.4548 22.791 13.363 22.7133 13.2857C22.6361 13.2081 22.5442 13.1466 22.4431 13.1046C22.342 13.0626 22.2336 13.041 22.1242 13.041C22.0147 13.041 21.9063 13.0626 21.8052 13.1046C21.7041 13.1466 21.6123 13.2081 21.535 13.2857L18 16.8224L14.465 13.2865C14.3877 13.2089 14.2958 13.1472 14.1947 13.1051C14.0935 13.0631 13.985 13.0414 13.8754 13.0414C13.7658 13.0414 13.6573 13.0631 13.5562 13.1051C13.455 13.1472 13.3631 13.2089 13.2858 13.2865C13.2083 13.3638 13.1467 13.4556 13.1047 13.5567C13.0628 13.6578 13.0411 13.7662 13.0411 13.8757C13.0411 13.9852 13.0628 14.0936 13.1047 14.1947C13.1467 14.2958 13.2083 14.3876 13.2858 14.4649L16.8225 17.9999L13.2867 21.5349C13.209 21.6121 13.1473 21.704 13.1053 21.8052C13.0632 21.9064 13.0416 22.0149 13.0416 22.1244C13.0416 22.234 13.0632 22.3425 13.1053 22.4437C13.1473 22.5449 13.209 22.6367 13.2867 22.714C13.3639 22.7916 13.4557 22.8531 13.5568 22.8951C13.6579 22.9371 13.7663 22.9587 13.8758 22.9587C13.9853 22.9587 14.0937 22.9371 14.1948 22.8951C14.2959 22.8531 14.3877 22.7916 14.465 22.714L18 19.1774L21.535 22.7124C21.6123 22.79 21.7041 22.8517 21.8053 22.8937C21.9065 22.9358 22.015 22.9575 22.1246 22.9575C22.2341 22.9575 22.3426 22.9358 22.4438 22.8937C22.545 22.8517 22.6369 22.79 22.7142 22.7124C22.7917 22.6351 22.8532 22.5433 22.8952 22.4422C22.9372 22.3411 22.9588 22.2327 22.9588 22.1232C22.9588 22.0137 22.9372 21.9053 22.8952 21.8042C22.8532 21.7031 22.7917 21.6113 22.7142 21.534L19.1783 17.9999Z" fill="#7F7F7F"/></svg></button>
-  </div>
-</div>
 
+
+<script>
+/* Theme switch: follows the system until the visitor chooses; the choice is remembered */
+(() => {
+  const root = document.documentElement, btn = document.getElementById('theme');
+  if (!btn) return;
+  const mq = matchMedia('(prefers-color-scheme: dark)');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  let chosen = null;
+  try { const v = localStorage.getItem('theme'); if (v === 'dark' || v === 'light') chosen = v; } catch (e) {}
+  const sync = () => {
+    const dark = root.dataset.theme === 'dark';
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.setAttribute('aria-label', dark ? 'Helles Design einschalten' : 'Dunkles Design einschalten');
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
+    meta.content = getComputedStyle(root).getPropertyValue('--bg').trim() || (dark ? '#0d0d11' : '#ffffff');
+  };
+  const apply = t => { root.dataset.theme = t; sync(); };
+  if (root.dataset.theme !== 'dark' && root.dataset.theme !== 'light') root.dataset.theme = chosen || (mq.matches ? 'dark' : 'light');
+  sync();
+  btn.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    chosen = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    if (reduce.matches) { apply(next); return; }
+    if (document.startViewTransition) {
+      const vt = document.startViewTransition(() => apply(next));
+      vt.ready.then(() => {
+        /* both directions: the new look cross-fades calmly over the old one */
+        root.animate({ opacity: [0, 1] },
+          { duration: 450, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' });
+      }).catch(() => {});
+      return;
+    }
+    root.classList.add('theme-fade');
+    apply(next);
+    setTimeout(() => root.classList.remove('theme-fade'), 450);
+  });
+  const onSystem = () => { if (!chosen) apply(mq.matches ? 'dark' : 'light'); };
+  mq.addEventListener ? mq.addEventListener('change', onSystem) : mq.addListener(onSystem);
+})();
+</script>
 
 <script>
 (() => {
@@ -742,8 +870,7 @@ void main(){
 (() => {
   const tile = document.getElementById('covers');
   if (!tile) return;
-  const covers = [...tile.querySelectorAll('.cover')], n = covers.length, label = document.getElementById('covers-now');
-  const modal = document.getElementById('cover-modal'), big = modal.querySelector('.modal__cover'), caption = document.getElementById('cover-caption'), closeBtn = modal.querySelector('.modal__close');
+  const covers = [...tile.querySelectorAll('.cover')], n = covers.length, label = document.getElementById('covers-now'), labelText = label.querySelector('.covers__text');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const STEP = 28 * Math.PI / 180;            // angle between two covers on the wheel
   let a = 0, from = 0, target = 0, t0 = 0, raf = 0, lastFront = 0, swap = 0;
@@ -769,10 +896,11 @@ void main(){
     });
     if (f !== lastFront) {
       lastFront = f; clearTimeout(swap);
-      label.setAttribute('aria-label', `Cover der Playlist „${covers[f].dataset.name}“ groß ansehen`);
-      if (reduce.matches) { label.textContent = covers[f].dataset.name; return; }
+      label.href = 'https://open.spotify.com/playlist/' + covers[f].dataset.spotify;
+      label.setAttribute('aria-label', `Playlist „${covers[f].dataset.name}“ in Spotify öffnen (neuer Tab)`);
+      if (reduce.matches) { labelText.textContent = covers[f].dataset.name; return; }
       label.classList.add('is-changing');
-      swap = setTimeout(() => { label.textContent = covers[f].dataset.name; label.classList.remove('is-changing'); }, 200);
+      swap = setTimeout(() => { labelText.textContent = covers[f].dataset.name; label.classList.remove('is-changing'); }, 200);
     }
   };
   const tick = t => {
@@ -784,31 +912,11 @@ void main(){
     target += by; from = a; t0 = performance.now(); state();
     if (reduce.matches) { a = target; layout(); } else if (!raf) raf = requestAnimationFrame(tick);
   };
-  /* overlay */
-  let opener = null;
-  const show = i => { const c = covers[mod(i)]; big.src = c.querySelector('img').currentSrc || c.querySelector('img').src; big.alt = `Cover der Playlist „${c.dataset.name}“`; caption.textContent = c.dataset.name; };
-  const open = i => {
-    opener = label; show(i);
-    modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); document.body.classList.add('has-modal');
-    closeBtn.focus({ preventScroll: true });
-  };
-  const close = () => {
-    if (!modal.classList.contains('is-open')) return;
-    modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('has-modal');
-    if (opener) opener.focus({ preventScroll: true });
-  };
   /* every click on the tile turns the wheel one cover further; only the cover on the left turns it back */
   tile.addEventListener('click', e => {
-    if (e.target.closest('.covers__name')) { open(target); return; }
+    if (e.target.closest('.covers__name')) return;   // the name pill is a link to the playlist on Spotify
     const c = e.target.closest('.cover');
     turn(c && covers.indexOf(c) === mod(target - 1) ? -1 : 1);
-  });
-  modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
-  document.addEventListener('keydown', e => {
-    if (!modal.classList.contains('is-open')) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { turn(e.key === 'ArrowRight' ? 1 : -1); show(target); }
   });
   /* covers reach past the tile edge; keep a focused one from scrolling the tile's content sideways */
   tile.addEventListener('scroll', () => { tile.scrollLeft = 0; tile.scrollTop = 0; });
