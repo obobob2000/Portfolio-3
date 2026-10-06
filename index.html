@@ -124,11 +124,6 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
   50%  { transform: translate(-50%, -95%) scale(1.1); }
   100% { transform: translate(calc(-50% + var(--dx, 0px)), -260%) scale(.9) rotate(var(--rot, 0deg)); opacity: 0; }
 }
-.smile { display: inline-grid; place-items: center; }
-.smile > span { grid-area: 1 / 1; transition: opacity .25s ease, transform .45s cubic-bezier(.3,1.6,.5,1); }
-.smile__face { opacity: 0; transform: scale(.4) rotate(-40deg); color: var(--blue); }
-.smile.is-smiling .smile__word { opacity: 0; transform: scale(.6); }
-.smile.is-smiling .smile__face { opacity: 1; transform: scale(1.15) rotate(0deg); }
 /* Theme switch: a round outlined button next to Kontakt (same height as the pill); a sun whose rays pull in while a second circle carves it into a moon */
 .theme { box-sizing: content-box; position: relative; width: 13.3px; height: 13.3px; padding: calc(10 * var(--u)); flex: none; background: none; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .theme svg { position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; display: block; overflow: visible; transition: transform .6s cubic-bezier(.3,1.4,.5,1); }
@@ -212,8 +207,10 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .tile__hit:focus-visible { outline: 2px solid var(--blue); outline-offset: -4px; }
 @media (hover: hover) { .tile--phone:hover .kz-frame { transform: scale(1.04); } }
 /* Playlist covers: a wheel of square covers. The front one stands upright at the top, its neighbours tilt away along the
-   circle and run out of the tile. Every click turns the wheel one cover further; the name below opens the cover large. */
-.tile--covers { background: var(--tile-cream); overflow: clip; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+   circle and run out of the tile. Every click turns the wheel one cover further, a sideways swipe or drag turns it by hand; the name below opens the playlist on Spotify. */
+.tile--covers { background: var(--tile-cream); overflow: clip; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.tile--covers.is-dragging, .tile--covers.is-dragging .cover { cursor: grabbing; }
 .cover { position: absolute; left: 50%; top: calc(123 * var(--u)); width: calc(208 * var(--u)); aspect-ratio: 1 / 1; margin-left: calc(-104 * var(--u));
   padding: 0; border: 0; border-radius: 10px; overflow: hidden; background: var(--cover-ph); font: inherit; cursor: pointer;
   box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) var(--cover-shadow); will-change: transform; -webkit-tap-highlight-color: transparent; }
@@ -400,7 +397,6 @@ body.has-modal { overflow: hidden; }
     <a class="pill" href="#top" id="home">Olivier Bütz</a>
     <a class="star star--3d" href="#top" aria-label="Nach oben"><span class="star3d"><svg class="face" style="--i:0" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:1" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:2" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:3" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:4" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:5" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:6" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:7" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:8" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:9" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:10" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:11" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:12" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:13" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="side" style="--i:14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><svg class="face" style="--i:15" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg></span></a>
     <nav aria-label="Hauptnavigation">
-      <a class="pill pill--plain smile" href="#laechel" id="smile" aria-label="Lächel"><span class="smile__word">Lächel</span><span class="smile__face" aria-hidden="true">:)</span></a>
       <a class="pill pill--outline" href="mailto:hallo@olivierbuetz.com" title="hallo@olivierbuetz.com">Kontakt</a>
       <button class="pill pill--outline theme" type="button" id="theme" aria-label="Dunkles Design einschalten" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><mask id="theme-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><circle class="theme__cut" cx="26" cy="2" r="5.6" fill="#000"/></mask><g class="theme__orb"><circle cx="12" cy="12" r="5.2" fill="currentColor" mask="url(#theme-mask)"/></g><path class="theme__rays" d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M5.2 18.8l1.6-1.6M17.2 6.8l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </nav>
@@ -912,8 +908,52 @@ void main(){
     target += by; from = a; t0 = performance.now(); state();
     if (reduce.matches) { a = target; layout(); } else if (!raf) raf = requestAnimationFrame(tick);
   };
+  /* swipe: the wheel follows the finger (or a mouse drag) sideways; letting go snaps to the nearest cover, a flick carries it
+     further. Vertical movement stays page scrolling (touch-action: pan-y on the tile). */
+  let drag = null, swiped = false;
+  const stepPx = () => Math.sin(STEP) * tile.clientWidth;     // finger travel that moves the front cover onto its neighbour
+  const settle = to => {
+    target = to; from = a; t0 = performance.now(); state();
+    if (reduce.matches) { a = target; layout(); } else if (!raf) raf = requestAnimationFrame(tick);
+  };
+  tile.addEventListener('pointerdown', e => {
+    swiped = false;
+    if (!e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0) || e.target.closest('.covers__name')) return;
+    drag = { id: e.pointerId, x0: e.clientX, a0: a, on: false, x: e.clientX, t: e.timeStamp, v: 0 };
+  });
+  tile.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x0;
+    if (!drag.on) {
+      if (Math.abs(dx) < 8) return;
+      drag.on = swiped = true; drag.a0 = a; drag.x0 = e.clientX;
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      try { tile.setPointerCapture(e.pointerId); } catch (err) {}
+      tile.classList.add('is-dragging');
+      return;
+    }
+    const dt = e.timeStamp - drag.t;
+    if (dt > 0) drag.v = .7 * ((e.clientX - drag.x) / dt) + .3 * drag.v;   // px per ms, smoothed
+    drag.x = e.clientX; drag.t = e.timeStamp;
+    a = drag.a0 - dx / stepPx(); layout();
+    const near = Math.round(a);
+    if (near !== target) { target = near; state(); }
+  });
+  const release = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const d = drag; drag = null;
+    if (!d.on) return;
+    tile.classList.remove('is-dragging');
+    const v = e.type === 'pointerup' && e.timeStamp - d.t < 80 ? d.v : 0;      // a pause before lifting is no flick
+    let to = Math.round(a - v * 180 / stepPx());
+    if (to === Math.round(d.a0) && Math.abs(a - d.a0) > .18) to += a > d.a0 ? 1 : -1;   // a short, clear swipe still moves one cover
+    settle(Math.max(Math.round(d.a0) - 3, Math.min(Math.round(d.a0) + 3, to)));
+  };
+  tile.addEventListener('pointerup', release);
+  tile.addEventListener('pointercancel', release);
   /* every click on the tile turns the wheel one cover further; only the cover on the left turns it back */
   tile.addEventListener('click', e => {
+    if (swiped) { swiped = false; e.preventDefault(); return; }   // that was a swipe, not a tap
     if (e.target.closest('.covers__name')) return;   // the name pill is a link to the playlist on Spotify
     const c = e.target.closest('.cover');
     turn(c && covers.indexOf(c) === mod(target - 1) ? -1 : 1);
@@ -922,20 +962,6 @@ void main(){
   tile.addEventListener('scroll', () => { tile.scrollLeft = 0; tile.scrollTop = 0; });
   state(); layout();
   window.addEventListener('resize', layout);
-})();
-</script>
-
-<script>
-(() => {
-  const s = document.getElementById('smile');
-  if (!s) return;
-  let timer = 0;
-  s.addEventListener('click', e => {
-    e.preventDefault();
-    s.classList.add('is-smiling');
-    clearTimeout(timer);
-    timer = setTimeout(() => s.classList.remove('is-smiling'), 1600);
-  });
 })();
 </script>
 
