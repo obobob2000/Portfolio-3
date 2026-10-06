@@ -132,7 +132,7 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .kz-icon.is-dragging { cursor: grabbing; }
 .kz-icon canvas { position: absolute; left: 50%; top: 50%; width: 220%; height: 220%; translate: -50% -50%; pointer-events: none; display: none; }
 .kz-icon.has-fx canvas { display: block; }
-.kz-icon svg { position: absolute; left: 25.76%; top: 32.88%; width: 48.67%; height: auto; display: block; pointer-events: none; }
+.kz-icon svg { position: absolute; left: 26.36%; top: 33.33%; width: 46.78%; height: auto; display: block; pointer-events: none; }
 
 /* Kadenz prototype: plays by itself inside an iframe; the black rounded box is the phone outline while it loads */
 .kz-frame { aspect-ratio: 418 / 872; height: auto; border: 0; display: block; background: #000; border-radius: 12.92% / 6.19%; }
@@ -151,10 +151,10 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
   box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(46, 28, 0, .16); will-change: transform; -webkit-tap-highlight-color: transparent; }
 .cover img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
 .cover:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.covers__name { position: absolute; left: 50%; top: calc(366 * var(--u)); translate: -50% 0; margin: 0; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px;
-  background: var(--bg); font: inherit; font-size: 14px; line-height: .95; color: var(--ink-muted); white-space: nowrap; cursor: zoom-in; z-index: 20;
-  transition: opacity .2s ease, border-color .2s ease; }
-.covers__name:hover { border-color: currentColor; }
+.covers__name { position: absolute; left: 50%; top: calc(366 * var(--u)); translate: -50% 0; margin: 0; padding: 6px 12px; border: 1px solid #000; border-radius: 999px;
+  background: #000; font: inherit; font-size: 14px; line-height: .95; color: #fff; white-space: nowrap; cursor: zoom-in; z-index: 20;
+  transition: opacity .2s ease, background-color .2s ease, border-color .2s ease; }
+.covers__name:hover { background: #2a2a2a; border-color: #2a2a2a; }
 .covers__name:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 .covers__name.is-changing { opacity: 0; }
 .modal--cover .modal__cover { width: calc(620 * var(--m)); height: auto; aspect-ratio: 1 / 1; object-fit: cover; display: block; border-radius: 10px; }
@@ -170,7 +170,7 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .photo.is-front { z-index: 2; }
 .photo.is-back { z-index: 1; }
 .photos:hover .photo.is-back { transform: translate(4%, -3%) rotate(2deg); }
-.photo { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.photo { transition: transform .5s cubic-bezier(.22,.9,.3,1); will-change: transform; }
 .salut { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 14px; line-height: 1; color: var(--salut); }
 
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
@@ -282,6 +282,7 @@ body.has-modal { overflow: hidden; }
 .hero .blob--orange { left: -26%; top: 56%; width: 142%; height: 116%;
   background: radial-gradient(closest-side, #ff6a00 0%, #ff6a00 55%, rgba(255,106,0,.6) 75%, rgba(255,106,0,0) 100%);
   animation: drift-orange 17s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.hero__dots { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .hero .grain { position: absolute; inset: 0; opacity: .07; mix-blend-mode: soft-light; pointer-events: none;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
 @keyframes drift-pink {
@@ -315,14 +316,14 @@ body.has-modal { overflow: hidden; }
     <a class="tile tile--icon" href="#kadenz" aria-label="Kadenz – Rennrad-App">
       <span class="kz-icon" id="kadenz-icon" role="img" aria-label="Kadenz App-Icon">
         <canvas aria-hidden="true"></canvas>
-        <svg viewBox="0 0 160.61 113.84" fill="#fff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M30.68 20.7 53.96 18.55v95.29H30.68V20.7ZM0 42.12l19.19-2.1v73.82H0V42.12Z"/><path transform="translate(66.82)" d="M 28.81 113.84 L 0 113.84 L 0 2.46 L 28.81 0 L 28.81 46.09 C 28.81 47.21 28.73 49.7 28.57 53.54 C 28.52 54.77 28.42 57.38 28.27 61.37 L 29.34 61.37 C 31.14 57.84 32.39 55.56 33.11 54.54 C 34.13 52.8 36.13 50.11 39.1 46.47 L 55.08 26.96 L 86.26 26.96 L 59.61 57.61 C 58.79 58.53 56.74 60.53 53.46 63.6 C 56.59 66.47 58.71 68.62 59.84 70.05 L 93.79 113.84 L 60.84 113.84 L 37.02 80.73 C 34.77 77.56 32.21 73.05 29.34 67.21 L 28.27 67.21 C 28.42 70.85 28.52 73.23 28.57 74.36 C 28.73 77.79 28.81 79.96 28.81 80.88 L 28.81 113.84 Z"/></svg>
+        <svg viewBox="0 0 154.363 109.41" fill="#fff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M91.9081 109.407H64.2241V11.188C64.2241 6.19684 68.0447 2.03634 73.0178 1.61197L91.9081 0V44.2944C91.9081 45.3771 91.8343 47.7641 91.6866 51.4553C91.6374 52.6365 91.539 55.1465 91.3913 58.9853H92.4249C94.1474 55.5894 95.3532 53.3993 96.0422 52.415C97.0266 50.7417 98.946 48.1578 101.801 44.6635L114.272 29.4339C116.097 27.2048 118.827 25.9122 121.708 25.9122H147.128L121.512 55.368C120.724 56.2538 118.755 58.1733 115.606 61.1262C118.608 63.8823 120.65 65.9494 121.733 67.3274L154.363 109.407H127.619C124.526 109.407 121.622 107.919 119.816 105.408L99.8073 77.589C97.6418 74.5376 95.181 70.2066 92.4249 64.596H91.3913C91.539 68.0903 91.6374 70.3788 91.6866 71.4616C91.8343 74.759 91.9081 76.8507 91.9081 77.7366V109.407Z"/><path d="M29.4825 28.6542C29.4825 23.6884 33.2657 19.5402 38.2106 19.0841L51.8588 17.8252V109.41H29.4825V28.6542Z"/><path d="M0 49.0948C0 44.1926 3.6896 40.076 8.56257 39.5413L18.4454 38.4569V109.41H0V49.0948Z"/></svg>
       </span>
     </a>
     <div class="tile tile--outline tile--phone">
       <iframe class="kz-frame" src="/kadenz-prototyp#embedauto" title="Kadenz App: automatischer Durchlauf durch Heute, Plan und Form" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
       <button class="tile__hit" id="kadenz" type="button" aria-haspopup="dialog" aria-controls="kadenz-modal" aria-label="Kadenz-Prototyp groß ansehen"></button>
     </div>
-    <div class="tile tile--hero"><div class="hero" aria-hidden="true"><span class="blob blob--pink"></span><span class="blob blob--orange"></span><span class="grain"></span></div></div>
+    <div class="tile tile--hero"><div class="hero" aria-hidden="true"><span class="blob blob--pink"></span><span class="blob blob--orange"></span><span class="grain"></span><canvas class="hero__dots"></canvas></div></div>
 
     <div class="tile tile--salut" id="laechel">
       <button class="photos" type="button" id="photo-swap" aria-label="Nächstes Foto nach vorne holen">
@@ -401,9 +402,27 @@ body.has-modal { overflow: hidden; }
   const stack = document.getElementById('photo-swap');
   if (!stack) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let busy = false;
+  let busy = false, hopTimer = 0;
+  const HOP_EVERY = 20000;
+  // Alle 20 s hüpft das hintere Foto kurz, als Hinweis, dass man tauschen kann.
+  const hop = () => {
+    const back = stack.querySelector('.photo.is-back');
+    if (busy || reduce || document.hidden || !back || !back.animate) return;
+    // additiv: der Hüpfer legt sich auf den aktuellen Zustand (auch auf den Hover-Versatz), ohne Sprung
+    back.animate(
+      [{ transform: 'translate(0,0) rotate(0deg)', easing: 'cubic-bezier(.3,.7,.4,1)' },
+       { transform: 'translate(7%, -9%) rotate(3.5deg)', offset: .22, easing: 'cubic-bezier(.5,0,.7,.4)' },
+       { transform: 'translate(0,0) rotate(0deg)', offset: .46, easing: 'cubic-bezier(.3,.7,.4,1)' },
+       { transform: 'translate(3.5%, -4.5%) rotate(1.7deg)', offset: .64, easing: 'cubic-bezier(.5,0,.7,.4)' },
+       { transform: 'translate(0,0) rotate(0deg)', offset: .84 },
+       { transform: 'translate(0,0) rotate(0deg)' }],
+      { duration: 1100, composite: 'add' });
+  };
+  const armHop = () => { clearInterval(hopTimer); if (!reduce) hopTimer = setInterval(hop, HOP_EVERY); };
+  armHop();
   stack.addEventListener('click', () => {
     if (busy) return;
+    armHop();
     const back = stack.querySelector('.photo.is-back');
     const front = stack.querySelector('.photo.is-front');
     const swap = () => {
@@ -412,28 +431,22 @@ body.has-modal { overflow: hidden; }
     };
     if (reduce || !back.animate) { swap(); return; }
     busy = true;
+    // Start und Ende laufen vom bzw. zum echten CSS-Zustand (inklusive Hover-Versatz),
+    // damit weder am Anfang noch am Ende etwas springt.
+    const from = [getComputedStyle(back).transform, getComputedStyle(front).transform].map(t => t === 'none' ? 'translate(0,0)' : t);
+    back.getAnimations().forEach(a => a.cancel());
     back.style.transition = front.style.transition = 'none';
-    const ease = 'cubic-bezier(.45,0,.2,1)';
-    const out = back.animate(
-      [{ transform: 'translate(0,0) rotate(0deg)' }, { transform: 'translate(62%, -10%) rotate(9deg)' }],
-      { duration: 260, easing: ease, fill: 'forwards' });
-    front.animate(
-      [{ transform: 'scale(1)' }, { transform: 'scale(.96) translate(-4%, 2%)' }],
-      { duration: 260, easing: ease, fill: 'forwards' });
-    out.onfinish = () => {
+    const AWAY = 'translate(58%, -8%) rotate(7deg)', DOWN = 'scale(.965) translate(-3%, 1.5%)';
+    const E1 = 'cubic-bezier(.45,.05,.35,1)', E2 = 'cubic-bezier(.22,.9,.3,1)';
+    const out1 = back.animate([{ transform: from[0] }, { transform: AWAY }], { duration: 460, easing: E1, fill: 'forwards' });
+    const out2 = front.animate([{ transform: from[1] }, { transform: DOWN }], { duration: 460, easing: E1, fill: 'forwards' });
+    out1.onfinish = () => {
       swap();
-      const back2 = back.animate(
-        [{ transform: 'translate(62%, -10%) rotate(9deg)' }, { transform: 'translate(0,0) rotate(0deg)' }],
-        { duration: 380, easing: 'cubic-bezier(.2,.9,.25,1.15)', fill: 'forwards' });
-      front.animate(
-        [{ transform: 'scale(.96) translate(-4%, 2%)' }, { transform: 'scale(1)' }],
-        { duration: 380, easing: ease, fill: 'forwards' });
-      back2.onfinish = () => {
-        back.getAnimations().forEach(a => a.cancel());
-        front.getAnimations().forEach(a => a.cancel());
-        back.style.transition = front.style.transition = '';
-        busy = false;
-      };
+      // nur der Start ist festgelegt; das Ziel ist der jeweilige CSS-Zustand
+      const in1 = back.animate([{ transform: AWAY, offset: 0 }], { duration: 620, easing: E2 });
+      front.animate([{ transform: DOWN, offset: 0 }], { duration: 620, easing: E2 });
+      out1.cancel(); out2.cancel();
+      in1.onfinish = () => { back.style.transition = front.style.transition = ''; busy = false; };
     };
   });
 })();
@@ -476,6 +489,91 @@ body.has-modal { overflow: hidden; }
     for (const b of blobs) { b.tx = 0; b.ty = 0; }
     kick();
   });
+})();
+</script>
+
+<script>
+/* Hero: Punktraster, das auf den Cursor reagiert. Ruhezustand: eine langsame Welle läuft diagonal durch.
+   Cursor: Punkte weichen aus, werden größer und heller. Klick/Tipp: eine Druckwelle läuft durchs Raster. */
+(() => {
+  const hero = document.querySelector('.hero');
+  const cv = hero && hero.querySelector('.hero__dots');
+  if (!cv || !cv.getContext) return;
+  const ctx = cv.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const N = 13;
+  let W = 0, H = 0, dpr = 1, dots = [], ripples = [];
+  let mx = -1e4, my = -1e4, inside = false, visible = false, raf = 0, last = 0, greeted = false;
+
+  const build = () => {
+    const r = hero.getBoundingClientRect();
+    if (!r.width) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const stepX = W / (N + 1), stepY = H / (N + 1);
+    dots = [];
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++)
+      dots.push({ gx: stepX * (i + 1), gy: stepY * (j + 1), ox: 0, oy: 0, vx: 0, vy: 0, i, j });
+    draw(performance.now());
+  };
+
+  const draw = now => {
+    const S = Math.min(W, H), R = S * 0.3, base = S * 0.0042;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const still = reduce.matches;
+    let energy = 0;
+    for (const d of dots) {
+      let fx = 0, fy = 0, prox = 0;
+      if (!still) {
+        const dx = d.gx + d.ox - mx, dy = d.gy + d.oy - my, dist = Math.hypot(dx, dy) || 1;
+        if (dist < R) { prox = 1 - dist / R; const f = prox * prox * S * 0.012; fx += dx / dist * f; fy += dy / dist * f; }
+        for (const rp of ripples) {
+          const rx = d.gx - rp.x, ry = d.gy - rp.y, rd = Math.hypot(rx, ry) || 1;
+          const front = (now - rp.t) * S * 0.0011, band = S * 0.09, off = Math.abs(rd - front);
+          if (off < band) { const f = (1 - off / band) * rp.a * S * 0.006; fx += rx / rd * f; fy += ry / rd * f; prox = Math.max(prox, (1 - off / band) * rp.a * 0.9); }
+        }
+        d.vx = (d.vx + fx - d.ox * 0.07) * 0.84; d.vy = (d.vy + fy - d.oy * 0.07) * 0.84;
+        d.ox += d.vx; d.oy += d.vy;
+        energy += Math.abs(d.vx) + Math.abs(d.vy) + Math.abs(d.ox) + Math.abs(d.oy);
+      }
+      const wave = still ? 0 : Math.sin(now * 0.0011 - (d.i + d.j) * 0.42);
+      const rad = base * (1 + 0.28 * wave) + prox * S * 0.0075;
+      ctx.globalAlpha = Math.min(1, 0.34 + 0.14 * wave + prox * 0.6);
+      ctx.beginPath(); ctx.arc(d.gx + d.ox, d.gy + d.oy, Math.max(0.4, rad), 0, 6.2832); ctx.fill();
+    }
+    return energy;
+  };
+
+  const loop = now => {
+    raf = 0;
+    if (!visible || document.hidden) return;
+    ctx.fillStyle = '#fff';
+    ripples = ripples.filter(rp => now - rp.t < 1900);
+    for (const rp of ripples) rp.a = Math.max(0, 1 - (now - rp.t) / 1900);
+    draw(now);
+    if (!reduce.matches) raf = requestAnimationFrame(loop);
+  };
+  const start = () => { if (!raf && visible && !reduce.matches) raf = requestAnimationFrame(loop); };
+  const ripple = (x, y) => { if (reduce.matches) return; ripples.push({ x, y, t: performance.now(), a: 1 }); if (ripples.length > 4) ripples.shift(); start(); };
+
+  const tile = hero.closest('.tile') || hero;
+  tile.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; inside = true; start(); });
+  tile.addEventListener('pointerleave', () => { mx = my = -1e4; inside = false; });
+  tile.addEventListener('pointerdown', e => { const r = hero.getBoundingClientRect(); ripple(e.clientX - r.left, e.clientY - r.top); if (e.pointerType !== 'mouse') { mx = my = -1e4; } });
+
+  ctx.fillStyle = '#fff';
+  build();
+  if (window.ResizeObserver) new ResizeObserver(build).observe(hero); else addEventListener('resize', build);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(en => {
+      visible = en[0].isIntersecting;
+      if (visible) { start(); if (!greeted) { greeted = true; setTimeout(() => ripple(W * 0.5, H * 0.5), 500); } }
+    }, { threshold: 0.25 }).observe(hero);
+  } else { visible = true; start(); }
+  document.addEventListener('visibilitychange', start);
+  reduce.addEventListener && reduce.addEventListener('change', () => { build(); start(); });
 })();
 </script>
 
