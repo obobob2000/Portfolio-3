@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400&family=Space+Grotesk:wght@700&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=65deca2a">
+<link rel="stylesheet" href="/assets/site.css?v=f60f730d">
 <script>
 /* set the theme before first paint: the visitor's saved choice, otherwise the system setting */
 (() => {
@@ -38,7 +38,7 @@
     <a class="pill" href="#top" id="home">Olivier Bütz</a>
     <a class="star star--3d" href="#top" aria-label="Nach oben"><span class="star3d"><svg class="face" style="--i:0" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg><script>(s=>{const p=s.parentNode,v=p.firstElementChild;for(let i=1;i<16;i++){const c=v.cloneNode(true);c.setAttribute('class',i===15?'face':'side');c.setAttribute('style','--i:'+i);p.insertBefore(c,s)}s.remove()})(document.currentScript)</script></span></a>
     <nav aria-label="Hauptnavigation">
-      <a class="pill pill--outline" href="mailto:hallo@olivierbuetz.com" title="hallo@olivierbuetz.com">Kontakt</a>
+      <a class="pill pill--outline cta" href="mailto:hallo@olivierbuetz.com" title="hallo@olivierbuetz.com">Kontakt<span class="covers__arrow" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 8 2M3.4 2H8v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
       <button class="pill pill--outline theme" type="button" id="theme" aria-label="Dunkles Design einschalten" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><mask id="theme-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><circle class="theme__cut" cx="26" cy="2" r="5.6" fill="#000"/></mask><g class="theme__orb"><circle cx="12" cy="12" r="5.2" fill="currentColor" mask="url(#theme-mask)"/></g><path class="theme__rays" d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M5.2 18.8l1.6-1.6M17.2 6.8l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </nav>
   </header>
@@ -55,7 +55,20 @@
       <iframe class="kz-frame" src="/kadenz-prototyp#embedauto" title="Kadenz App: automatischer Durchlauf durch Heute, Plan und Form" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
       <button class="tile__hit" id="kadenz" type="button" aria-haspopup="dialog" aria-controls="kadenz-modal" aria-label="Kadenz-Prototyp groß ansehen"></button>
     </div>
-    <div class="tile tile--hero"><div class="hero" aria-hidden="true"><span class="blob blob--pink"></span><span class="blob blob--orange"></span><span class="grain"></span><canvas class="hero__fluid"></canvas></div></div>
+    <div class="tile tile--covers" id="covers" role="group" aria-label="Meine Playlist-Cover">
+      <button class="cover" type="button" data-name="26" data-tint="#0336dd" data-spotify="02HQHcOR1q0QLG8usMrByi"><img src="/assets/cover-26.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="20.25" data-tint="#515350" data-spotify="7gbJLqvMXSqEjG7aJnRWSl"><img src="/assets/cover-2025.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="twenty4" data-tint="#867f63" data-spotify="3A6yu14ne17N7FLckNPbf6"><img src="/assets/cover-2024.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="20 : 23" data-tint="#7a7772" data-spotify="4UvVh63YCRlTQtEvBScURJ"><img src="/assets/cover-2023.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="22." data-tint="#2f3228" data-spotify="4UNiPquxtbgZtm6QqKa2it"><img src="/assets/cover-2022.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="21 deuxun" data-tint="#b59489" data-spotify="5g4bmPBBpv7jgCae2TIRfU"><img src="/assets/cover-2021.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="2020 O.S.T" data-tint="#2a02fc" data-spotify="7qGHs6tKpRZwKu6UNnaxpn"><img src="/assets/cover-2020.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="2019 Records" data-tint="#c59f93" data-spotify="771KOJITsPvTl1qhdo2h3N"><img src="/assets/cover-2019.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="2018 Aue!" data-tint="#5e5b5c" data-spotify="6V0zohnhdwJ4TvUhBu9u6i"><img src="/assets/cover-2018.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <button class="cover" type="button" data-name="20-17" data-tint="#47432e" data-spotify="6AQHyvQnkYqUlV5a7rcnO2"><img src="/assets/cover-2017.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
+      <a class="covers__name" id="covers-now" href="https://open.spotify.com/playlist/02HQHcOR1q0QLG8usMrByi" target="_blank" rel="noopener" title="In Spotify öffnen" aria-label="Playlist „26“ in Spotify öffnen (neuer Tab)"><span class="covers__text">26</span><span class="covers__arrow" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 8 2M3.4 2H8v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    </div>
+
 
     <div class="tile tile--salut" id="laechel">
       <button class="photos" type="button" id="photo-swap" aria-label="Nächstes Foto nach vorne holen">
@@ -65,31 +78,25 @@
       <p class="salut">Salut!</p>
     </div>
     <div class="tile tile--image tile--zoom" style="background:#03035c"><img src="/assets/ring.webp" loading="lazy" decoding="async" alt="App-Icon mit weißem Ring auf blau-orangem Verlauf" width="547" height="550"></div>
-    <div class="tile tile--covers" id="covers" role="group" aria-label="Meine Playlist-Cover">
-      <button class="cover" type="button" data-name="26" data-spotify="02HQHcOR1q0QLG8usMrByi"><img src="/assets/cover-26.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="20.25" data-spotify="7gbJLqvMXSqEjG7aJnRWSl"><img src="/assets/cover-2025.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="twenty4" data-spotify="3A6yu14ne17N7FLckNPbf6"><img src="/assets/cover-2024.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="20 : 23" data-spotify="4UvVh63YCRlTQtEvBScURJ"><img src="/assets/cover-2023.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="22." data-spotify="4UNiPquxtbgZtm6QqKa2it"><img src="/assets/cover-2022.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="21 deuxun" data-spotify="5g4bmPBBpv7jgCae2TIRfU"><img src="/assets/cover-2021.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="2020 O.S.T" data-spotify="7qGHs6tKpRZwKu6UNnaxpn"><img src="/assets/cover-2020.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="2019 Records" data-spotify="771KOJITsPvTl1qhdo2h3N"><img src="/assets/cover-2019.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="2018 Aue!" data-spotify="6V0zohnhdwJ4TvUhBu9u6i"><img src="/assets/cover-2018.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <button class="cover" type="button" data-name="20-17" data-spotify="6AQHyvQnkYqUlV5a7rcnO2"><img src="/assets/cover-2017.webp" alt="" width="480" height="480" draggable="false" decoding="async"></button>
-      <a class="covers__name" id="covers-now" href="https://open.spotify.com/playlist/02HQHcOR1q0QLG8usMrByi" target="_blank" rel="noopener" title="In Spotify öffnen" aria-label="Playlist „26“ in Spotify öffnen (neuer Tab)"><span class="covers__text">26</span><span class="covers__arrow" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 8 2M3.4 2H8v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-    </div>
-
+    <button class="tile tile--stack" type="button" id="nw" aria-label="Kartenstapel mit Kölschem Grundgesetz, oben Blau. Klicken dreht die Karte um, Wischen oder ein zweiter Klick legt sie weg">
+      <span class="stk" aria-hidden="true">
+        <span class="stk__card" style="--d:0; --c:#0f13f6; --ink:#fff" data-name="Blau"><img class="stk__face" src="/assets/nw-card-0.webp" alt="" width="660" height="674" draggable="false"><span class="stk__back"><span class="stk__no">Kölsches Grundgesetz, § 1</span><span class="stk__said"><span class="stk__text">Et es wie et es.</span></span></span></span>
+        <span class="stk__card" style="--d:1; --c:#f60f0f; --ink:#fff" data-name="Rot"><img class="stk__face" src="/assets/nw-card-1.webp" alt="" width="660" height="674" draggable="false"><span class="stk__back"><span class="stk__no">Kölsches Grundgesetz, § 2</span><span class="stk__said"><span class="stk__text">Et kütt wie et kütt.</span></span></span></span>
+        <span class="stk__card" style="--d:2; --c:#ff8c00; --ink:#000" data-name="Orange"><img class="stk__face" src="/assets/nw-card-2.webp" alt="" width="660" height="674" draggable="false"><span class="stk__back"><span class="stk__no">Kölsches Grundgesetz, § 3</span><span class="stk__said"><span class="stk__text">Et hätt noch immer jot jejange.</span></span></span></span>
+        <span class="stk__card" style="--d:3; --c:#ffd900; --ink:#000" data-name="Gelb"><img class="stk__face" src="/assets/nw-card-3.webp" alt="" width="660" height="674" draggable="false"><span class="stk__back"><span class="stk__no">Kölsches Grundgesetz, § 4</span><span class="stk__said"><span class="stk__text">Wat fott es, es fott.</span></span></span></span>
+      </span>
+    </button>
     <div class="tile tile--image"><img src="/assets/shadow.webp" loading="lazy" decoding="async" alt="Schatten eines Radfahrers im Abendlicht" width="547" height="550"></div>
     <div class="tile tile--image tile--zoom" style="background:#ee0606"><img src="/assets/calamine.webp" loading="lazy" decoding="async" alt="La Calamine, Kuh-Logo since 4720 aue" width="548" height="548"></div>
     <button class="tile tile--image tile--dice" type="button" id="dice" aria-label="Würfeln"><img src="/assets/dice.webp" loading="lazy" decoding="async" alt="Drei leuchtende Würfel im Flug" width="547" height="550"></button>
   </main>
 
   <footer class="site-footer bar" id="kontakt">
-    <a class="pill pill--wide pill--plain merci" href="#top" id="merci">Merci</a>
+    <a class="pill pill--wide pill--plain merci cta" href="#top" id="merci">Merci<span class="covers__arrow" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 8 2M3.4 2H8v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
     <a class="star" href="#top" aria-label="Nach oben"><svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 20.9469V15.0531H6.21239L11.9469 16.0885L12.3451 15.0531L7.56637 11.7876L3.18584 7.32743L7.32743 3.18584L11.7876 7.56637L15.0531 12.3451L16.0885 11.9469L15.0531 6.21239V0H20.9469V6.21239L19.9115 11.9469L20.9469 12.3451L24.2124 7.56637L28.6726 3.18584L32.8142 7.32743L28.4336 11.7876L23.6549 15.0531L24.0531 16.0885L29.7876 15.0531H36V20.9469H29.7876L24.0531 19.9115L23.6549 20.9469L28.4336 24.2124L32.8142 28.6726L28.6726 32.8142L24.2124 28.4336L20.9469 23.6549L19.9115 24.0531L20.9469 29.7876V36H15.0531V29.7876L16.0885 24.0531L15.0531 23.6549L11.7876 28.4336L7.32743 32.8142L3.18584 28.6726L7.56637 24.2124L12.3451 20.9469L11.9469 19.9115L6.21239 20.9469H0Z" fill="currentColor"/></svg></a>
     <nav aria-label="Footer">
-      <a class="pill pill--outline" href="mailto:hallo@olivierbuetz.com?subject=Feierabendrunde" title="hallo@olivierbuetz.com">Feierabendrunde</a>
-      <a class="pill pill--outline pill--wide" href="mailto:hallo@olivierbuetz.com" title="hallo@olivierbuetz.com">Kontakt</a>
+      <a class="pill pill--outline cta" href="mailto:hallo@olivierbuetz.com?subject=Feierabendrunde" title="hallo@olivierbuetz.com">Feierabendrunde<span class="covers__arrow" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 8 2M3.4 2H8v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <a class="pill pill--outline pill--wide cta" href="mailto:hallo@olivierbuetz.com" title="hallo@olivierbuetz.com">Kontakt<span class="covers__arrow" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8 8 2M3.4 2H8v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
     </nav>
   </footer>
 </div>
@@ -128,6 +135,6 @@
 
 
 
-<script src="/assets/site.js?v=25d977fc"></script>
+<script src="/assets/site.js?v=c7792c43"></script>
 </body>
 </html>
