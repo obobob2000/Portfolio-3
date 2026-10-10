@@ -96,165 +96,6 @@ try {
 } catch (e) { console.error(e); }
 try {
 (() => {
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
-  const fine = matchMedia('(hover: hover) and (pointer: fine)');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  const blobs = [
-    { el: hero.querySelector('.blob--pink'),   rest: [1.03, 0.45], k: 0.32 },
-    { el: hero.querySelector('.blob--orange'), rest: [0.45, 1.14], k: 0.16 }
-  ];
-  blobs.forEach(b => { b.x = 0; b.y = 0; b.tx = 0; b.ty = 0; });
-  let raf = 0;
-  const tick = () => {
-    let moving = false;
-    for (const b of blobs) {
-      b.x += (b.tx - b.x) * 0.08;
-      b.y += (b.ty - b.y) * 0.08;
-      if (Math.abs(b.tx - b.x) > 0.1 || Math.abs(b.ty - b.y) > 0.1) moving = true;
-      b.el.style.translate = b.x.toFixed(2) + 'px ' + b.y.toFixed(2) + 'px';
-    }
-    raf = moving ? requestAnimationFrame(tick) : 0;
-  };
-  const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
-  hero.addEventListener('pointermove', e => {
-    if (!fine.matches || reduce.matches || hero.classList.contains('has-fluid')) return;
-    const r = hero.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-    for (const b of blobs) {
-      b.tx = (px - b.rest[0]) * r.width * b.k;
-      b.ty = (py - b.rest[1]) * r.height * b.k;
-    }
-    kick();
-  });
-  hero.addEventListener('pointerleave', () => {
-    for (const b of blobs) { b.tx = 0; b.ty = 0; }
-    kick();
-  });
-})();
-} catch (e) { console.error(e); }
-try {
-/* Hero: liquid gradient. A WebGL shader warps the colour field so it flows like paint in water; the cursor (or a finger moving
-   sideways) stirs it and leaves swirls that fade. Without WebGL the CSS gradient with its drifting blobs stays as it is.
-   Pauses off screen and in a hidden tab; under reduced motion it is a single still frame. */
-(() => {
-  const hero = document.querySelector('.hero');
-  const cv = hero && hero.querySelector('.hero__fluid');
-  if (!cv || !cv.getContext) return;
-  const tile = hero.closest('.tile') || hero;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  const K = 8, P = new Float32Array(K * 3), V = new Float32Array(K * 2);   // the last stirs: position + strength, direction
-  let gl = null, uR, uT, uP, uV, W = 0, H = 0, S = 0;
-  let head = 0, lastX = -1e4, lastY = 0, plx = 0, ply = 0, plt = 0, visible = false, raf = 0, last = 0, skip = false, greeted = false;
-  const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
-  const FS = `#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#else
-precision mediump float;
-#endif
-uniform vec2 R; uniform float T; uniform vec3 P[${K}]; uniform vec2 V[${K}];
-float hash(vec2 p){ vec3 a = fract(vec3(p.xyx) * .1031); a += dot(a, a.yzx + 33.33); return fract((a.x + a.y) * a.z); }
-float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
-  return mix(mix(hash(i), hash(i + vec2(1., 0.)), f.x), mix(hash(i + vec2(0., 1.)), hash(i + vec2(1., 1.)), f.x), f.y); }
-float fbm(vec2 p){ float v = 0., a = .5; for (int i = 0; i < 4; i++) { v += a * noise(p); p = p * 2.03 + 11.7; a *= .5; } return v; }
-void main(){
-  vec2 uv = gl_FragCoord.xy / R; uv.y = 1. - uv.y;
-  vec2 p = uv;
-  /* stirs: each pushes the field along its direction and twists it around its centre */
-  for (int i = 0; i < ${K}; i++) { vec2 d = p - P[i].xy; float g = exp(-dot(d, d) / .02) * P[i].z; p -= V[i] * g * .2; p += vec2(-d.y, d.x) * g * 1.1; }
-  float t = T * .05;
-  vec2 q = vec2(fbm(p * 1.7 + vec2(0., t)), fbm(p * 1.7 + vec2(5.2, -t * 1.3)));
-  vec2 r = vec2(fbm(p * 1.5 + 2.4 * q + vec2(1.7, 9.2) + .6 * t), fbm(p * 1.5 + 2.4 * q + vec2(8.3, 2.8) - .5 * t));
-  vec2 w = p + (r - .5) * .9 + (q - .5) * .25;
-  /* the same layout as the CSS gradient: blue base, pink from the top right, orange from the bottom left */
-  float pink = smoothstep(1.02, .3, length((w - vec2(1.03, .42)) / vec2(.98, .98)));
-  float orange = smoothstep(1., .45, length((w - vec2(.42, 1.14)) / vec2(.88, .74)));
-  vec3 col = mix(vec3(0., .09, .6), vec3(0., .15, 1.), smoothstep(.15, .9, w.x * .45 + (1. - w.y) * .55));
-  col = mix(col, vec3(.94, .08, .5), pink);
-  col = mix(col, vec3(1., .42, 0.), orange);
-  col += (hash(gl_FragCoord.xy + fract(T) * 61.) - .5) * .045;   // fine grain
-  gl_FragColor = vec4(col, 1.);
-}`;
-  const init = () => {
-    try { gl = cv.getContext('webgl', { antialias: false, alpha: false }) || cv.getContext('experimental-webgl', { antialias: false, alpha: false }); } catch (e) { gl = null; }
-    if (!gl) return false;
-    const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
-    const vs = sh(gl.VERTEX_SHADER, VS), fs = sh(gl.FRAGMENT_SHADER, FS), prog = gl.createProgram();
-    if (!vs || !fs) { gl = null; return false; }
-    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { gl = null; return false; }
-    gl.useProgram(prog);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    uR = gl.getUniformLocation(prog, 'R'); uT = gl.getUniformLocation(prog, 'T'); uP = gl.getUniformLocation(prog, 'P'); uV = gl.getUniformLocation(prog, 'V');
-    hero.classList.add('has-fluid');
-    return true;
-  };
-  const size = () => {
-    const r = hero.getBoundingClientRect(); if (!r.width) return;
-    W = r.width; H = r.height; S = Math.min(W, H);
-    const d = Math.min(window.devicePixelRatio || 1, 1.5), w = Math.round(W * d), h = Math.round(H * d);
-    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
-    draw(performance.now());
-  };
-  const draw = now => {
-    if (!gl) return;
-    gl.viewport(0, 0, cv.width, cv.height);
-    gl.uniform2f(uR, cv.width, cv.height); gl.uniform1f(uT, reduce.matches ? 40 : (now / 1000) % 3600);
-    gl.uniform3fv(uP, P); gl.uniform2fv(uV, V);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-  };
-  const loop = now => {
-    raf = 0;
-    if (!gl || !visible || document.hidden) return;
-    const dt = Math.min(64, now - (last || now)); last = now;
-    let active = 0; const f = Math.exp(-dt / 1100);
-    for (let i = 0; i < K; i++) { P[i * 3 + 2] *= f; if (P[i * 3 + 2] > active) active = P[i * 3 + 2]; }
-    skip = active < .02 && !skip;          // nothing is being stirred: the slow drift only needs every other frame
-    if (!skip) draw(now);
-    if (!reduce.matches) raf = requestAnimationFrame(loop);
-  };
-  const start = () => { if (!raf && gl && visible && !reduce.matches) { last = 0; raf = requestAnimationFrame(loop); } };
-  const stir = (x, y, vx, vy, s) => { P[head * 3] = x / W; P[head * 3 + 1] = y / H; P[head * 3 + 2] = s; V[head * 2] = vx; V[head * 2 + 1] = vy; head = (head + 1) % K; start(); };
-
-  const pos = e => { const r = hero.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-  tile.addEventListener('pointermove', e => {
-    if (!gl || reduce.matches) return;
-    const [x, y] = pos(e), now = performance.now(), dt = Math.max(1, now - plt), vx = (x - plx) / dt, vy = (y - ply) / dt;
-    plx = x; ply = y; plt = now;
-    if (lastX < -1e3) { lastX = x; lastY = y; return; }
-    if (Math.hypot(x - lastX, y - lastY) < S * .05) return;        // one stir every few per cent of the tile, not per event
-    const sp = Math.hypot(vx, vy) || 1, k = Math.max(.2, Math.min(1, sp / 1.2));
-    stir(x, y, vx / sp * k, vy / sp * k, k); lastX = x; lastY = y;
-  });
-  const leave = () => { lastX = -1e4; };
-  tile.addEventListener('pointerleave', leave);
-  tile.addEventListener('pointercancel', leave);
-  tile.addEventListener('pointerdown', e => {
-    if (!gl || reduce.matches) return;
-    const [x, y] = pos(e); plx = x; ply = y; plt = performance.now(); lastX = x; lastY = y;
-    stir(x, y, 0, 0, 1);                                            // a click or tap drops a swirl
-  });
-  tile.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') leave(); });
-
-  if (!init()) return;
-  cv.addEventListener('webglcontextlost', e => { e.preventDefault(); gl = null; hero.classList.remove('has-fluid'); });
-  cv.addEventListener('webglcontextrestored', () => { if (init()) { size(); start(); } });
-  size();
-  if (window.ResizeObserver) new ResizeObserver(size).observe(hero); else addEventListener('resize', size);
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(en => {
-      visible = en[0].isIntersecting;
-      if (visible) { start(); if (!greeted && !reduce.matches) { greeted = true; setTimeout(() => stir(W * .5, H * .5, 0, 0, .9), 500); } }
-    }, { threshold: 0.1 }).observe(hero);
-  } else { visible = true; start(); }
-  document.addEventListener('visibilitychange', start);
-  reduce.addEventListener && reduce.addEventListener('change', () => { draw(performance.now()); start(); });
-})();
-} catch (e) { console.error(e); }
-try {
-(() => {
   const icon = document.getElementById('kadenz-icon');
   if (!icon) return;
   const link = icon.closest('a');
@@ -450,6 +291,7 @@ try {
     });
     if (f !== lastFront) {
       lastFront = f; clearTimeout(swap);
+      tile.style.setProperty('--tint', covers[f].dataset.tint);
       label.href = 'https://open.spotify.com/playlist/' + covers[f].dataset.spotify;
       label.setAttribute('aria-label', `Playlist „${covers[f].dataset.name}“ in Spotify öffnen (neuer Tab)`);
       if (reduce.matches) { labelText.textContent = covers[f].dataset.name; return; }
@@ -518,6 +360,7 @@ try {
   });
   /* covers reach past the tile edge; keep a focused one from scrolling the tile's content sideways */
   tile.addEventListener('scroll', () => { tile.scrollLeft = 0; tile.scrollTop = 0; });
+  tile.style.setProperty('--tint', covers[0].dataset.tint);
   state(); layout();
   window.addEventListener('resize', layout);
 })();
@@ -565,6 +408,76 @@ try {
     frames.push({ transform: 'translate(0, 1%) rotate(1deg) scale(.98)', filter: 'blur(0px)', offset: 0.88 });
     frames.push({ transform: 'scale(1) rotate(0deg)', filter: 'blur(0px)', offset: 1 });
     anim = img.animate(frames, { duration: 1100, easing: 'ease-out' });
+  });
+})();
+} catch (e) { console.error(e); }
+try {
+/* Card stack. A click turns the top card over (the back carries one article of the Kölsches Grundgesetz); a click on the back,
+   or a swipe left or right at any time, sends the card flying off that way and it slides back in at the bottom.
+   A short drag springs back. The tile takes on a light tint of the card on top. */
+(() => {
+  const t = document.getElementById('nw');
+  if (!t) return;
+  const cards = [...t.querySelectorAll('.stk__card')], reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  let order = cards.slice(), busy = false, drag = null, swiped = false;
+  const label = () => t.setAttribute('aria-label', 'Kartenstapel mit Kölschem Grundgesetz, oben ' + order[0].dataset.name +
+    (order[0].classList.contains('is-flipped') ? ', Rückseite: ' + order[0].querySelector('.stk__text').textContent + ' Klicken legt die Karte weg' : '. Klicken dreht die Karte um, Wischen legt sie weg'));
+  const place = () => {
+    order.forEach((c, d) => { c.style.setProperty('--d', d); c.classList.toggle('is-top', d === 0); });
+    t.style.setProperty('--tint', order[0].style.getPropertyValue('--c'));
+    label();
+  };
+  place();
+  const flipDeg = c => c.classList.contains('is-flipped') ? 180 : 0;
+  const fly = dir => {
+    if (busy) return;
+    busy = true;
+    const top = order[0], w = t.clientWidth;
+    top.style.transition = 'transform .42s cubic-bezier(.3,.5,.6,1), opacity .38s ease .04s';
+    top.style.transform = 'perspective(1400px) translate(' + (dir * w * 1.05).toFixed(0) + 'px, ' + (-w * .08).toFixed(0) + 'px) rotate(' + (dir * 18) + 'deg) rotateY(' + flipDeg(top) + 'deg)';
+    top.style.opacity = '0';
+    setTimeout(() => {
+      order = order.slice(1).concat(top);
+      top.classList.remove('is-flipped');
+      top.style.transition = top.style.transform = top.style.opacity = '';
+      place();
+      busy = false;
+    }, reduce.matches ? 0 : 420);
+  };
+  t.addEventListener('pointerdown', e => {
+    if (busy || !e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    swiped = false; drag = { x0: e.clientX, y0: e.clientY, on: false, x: e.clientX, t: e.timeStamp, v: 0, id: e.pointerId };
+  });
+  t.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    if (!drag.on) {
+      if (Math.abs(dx) < 8) return;
+      drag.on = swiped = true;
+      try { t.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    const dt = e.timeStamp - drag.t; if (dt > 0) drag.v = .7 * (e.clientX - drag.x) / dt + .3 * drag.v;
+    drag.x = e.clientX; drag.t = e.timeStamp;
+    const top = order[0];
+    top.style.transition = 'none';
+    top.style.transform = 'perspective(1400px) translate(' + dx.toFixed(1) + 'px, ' + (dy * .15).toFixed(1) + 'px) rotate(' + (dx / t.clientWidth * 14).toFixed(2) + 'deg) rotateY(' + flipDeg(top) + 'deg)';
+  });
+  const release = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const d = drag; drag = null;
+    if (!d.on) return;
+    const dx = d.x - d.x0, v = e.type === 'pointerup' && e.timeStamp - d.t < 90 ? d.v : 0;
+    if (Math.abs(dx) > t.clientWidth * .22 || Math.abs(v) > .35) fly(Math.sign(Math.abs(v) > .35 ? v : dx));
+    else { const top = order[0]; top.style.transition = top.style.transform = ''; }   // not far enough: back onto the stack
+  };
+  t.addEventListener('pointerup', release);
+  t.addEventListener('pointercancel', release);
+  t.addEventListener('click', () => {
+    if (swiped) { swiped = false; return; }
+    if (busy) return;
+    const top = order[0];
+    if (top.classList.contains('is-flipped')) fly(1);
+    else { top.classList.add('is-flipped'); label(); }
   });
 })();
 } catch (e) { console.error(e); }
