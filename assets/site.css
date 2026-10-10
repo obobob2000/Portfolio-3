@@ -134,6 +134,8 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
   transition: rotate .6s cubic-bezier(.2,.8,.2,1);
 }
 .star svg { width: 100%; height: 100%; display: block; }
+/* the header star stays where it is while the page scrolls (it is the link back to the top); above the tiles, below the overlays */
+.site-header .star { position: fixed; top: calc(88 * var(--u)); z-index: 50; }
 .star:hover { rotate: 90deg; }
 .star--3d { perspective: calc(220 * var(--u)); }
 .star--3d:hover { rotate: none; }
@@ -148,6 +150,28 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
   to   { transform: rotateX(-12deg) rotateY(360deg); }
 }
 
+/* Card stack (Figma frames 13, 1, 2, 3): four glass-star cards, blue on top, the others peeking out underneath.
+   Swiping left or right (or a click) sends the top card flying off; it comes back in at the bottom of the stack. */
+.tile--stack { padding: 0; border: 0; width: 100%; font: inherit; background: var(--tile-grey); cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.tile--stack:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+.stk { position: absolute; inset: 0; display: block; }
+/* the tile takes on a light tint of the card on top */
+.tile--stack { --tint: var(--tile-grey); background: color-mix(in oklab, var(--tile-grey) 80%, var(--tint)); transition: background-color .6s cubic-bezier(.2,.8,.2,1); }
+.stk__card { --f: 0deg; position: absolute; left: 11%; top: 5%; width: 78%; aspect-ratio: 539.3 / 550; display: block;
+  border-radius: 11.1% / 10.9%; transform-style: preserve-3d; transform-origin: 50% 100%;
+  transform: perspective(1400px) translateY(calc(var(--d) * 3.8%)) scale(calc(1 - var(--d) * .055)) rotateY(var(--f));
+  z-index: calc(10 - var(--d)); user-select: none; -webkit-user-select: none; pointer-events: none;
+  transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .35s ease; }
+.stk__card.is-flipped { --f: 180deg; }
+/* front: the Figma render; back: one article of the Kölsches Grundgesetz on the card's colour */
+.stk__face, .stk__back { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; display: block;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden; box-shadow: 0 calc(10 * var(--u)) calc(30 * var(--u)) rgba(10, 10, 60, .18); }
+.stk__back { transform: rotateY(180deg); background: var(--c); color: var(--ink); padding: 11%; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: space-between; text-align: left; }
+.stk__no { font-size: max(12px, calc(17 * var(--u))); line-height: 1.3; opacity: .75; }
+.stk__said { display: flex; flex-direction: column; gap: .5em; }
+.stk__text { font-family: var(--font-display); font-weight: 700; font-size: max(20px, calc(40 * var(--u))); line-height: 1.08; letter-spacing: -.01em; text-wrap: balance; }
+@media (hover: hover) { .tile--stack:hover .stk__card.is-top { transform: perspective(1400px) translateY(-1.5%) rotate(-1.5deg) rotateY(var(--f)); } }
 /* Grid: 3 columns x 3 rows of 550px tiles */
 .grid {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -157,7 +181,6 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .tile { position: relative; border-radius: var(--radius); height: calc(550 * var(--u)); min-width: 0; overflow: hidden;
   display: flex; align-items: center; justify-content: center; }
 .tile--outline { border: 1px solid var(--line); }
-.tile--hero { display: block; touch-action: pan-y; }
 .tile--image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .tile--icon { background: var(--tile-grey); overflow: visible; cursor: zoom-in; }
@@ -187,7 +210,9 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 @media (hover: hover) { .tile--phone:hover .kz-frame { transform: scale(1.04); } }
 /* Playlist covers: a wheel of square covers. The front one stands upright at the top, its neighbours tilt away along the
    circle and run out of the tile. Every click turns the wheel one cover further, a sideways swipe or drag turns it by hand; the name below opens the playlist on Spotify. */
-.tile--covers { background: var(--tile-cream); overflow: clip; cursor: pointer; -webkit-tap-highlight-color: transparent;
+/* the tile takes on a light tint of the cover in front (data-tint: the cover's main colour, weighted towards its saturated parts) */
+.tile--covers { --tint: var(--tile-cream); background: var(--tile-cream); background: color-mix(in oklab, var(--tile-cream) 82%, var(--tint));
+  transition: background-color .8s cubic-bezier(.2,.8,.2,1); overflow: clip; cursor: pointer; -webkit-tap-highlight-color: transparent;
   touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .tile--covers.is-dragging, .tile--covers.is-dragging .cover { cursor: grabbing; }
 .cover { position: absolute; left: 50%; top: calc(123 * var(--u)); width: calc(208 * var(--u)); aspect-ratio: 1 / 1; margin-left: calc(-104 * var(--u));
@@ -204,9 +229,12 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
   transition: width .28s cubic-bezier(.22,.9,.3,1), margin-left .28s cubic-bezier(.22,.9,.3,1); }
 .covers__arrow svg { flex: none; width: 10px; height: 10px; display: block; opacity: 0; transform: translate(-7px, 7px);
   transition: transform .32s cubic-bezier(.22,.9,.3,1), opacity .2s ease; }
-.covers__name:hover .covers__arrow, .covers__name:focus-visible .covers__arrow { width: 10px; margin-left: 6px; }
-.covers__name:hover .covers__arrow svg, .covers__name:focus-visible .covers__arrow svg { opacity: 1; transform: none; }
-.covers__name:active .covers__arrow svg { transform: translate(2px, -2px); }
+/* the same arrow sits in every text CTA (Kontakt, Feierabendrunde, Merci) and slides in on hover the same way */
+.covers__name:hover .covers__arrow, .covers__name:focus-visible .covers__arrow,
+.cta:hover .covers__arrow, .cta:focus-visible .covers__arrow { width: 10px; margin-left: 6px; }
+.covers__name:hover .covers__arrow svg, .covers__name:focus-visible .covers__arrow svg,
+.cta:hover .covers__arrow svg, .cta:focus-visible .covers__arrow svg { opacity: 1; transform: none; }
+.covers__name:active .covers__arrow svg, .cta:active .covers__arrow svg { transform: translate(2px, -2px); }
 @media (hover: none) {
   .covers__arrow { width: 10px; margin-left: 6px; }
   .covers__arrow svg { opacity: 1; transform: none; }
@@ -295,6 +323,7 @@ body.has-modal { overflow: hidden; }
   .tile { height: auto; aspect-ratio: 1 / 1; }
   /* image tiles carry their own baked 60px corner (≈11% of width): match it so no backdrop shows */
   .tile--image { border-radius: 11% / 11%; background: transparent !important; }
+  .tile--stack { border-radius: 11% / 11%; }
   .kz-icon { width: 45%; }
   .cover { top: 22.4%; width: 37.8%; margin-left: -18.9%; }
   .covers__name { top: 66.5%; }
@@ -309,7 +338,7 @@ body.has-modal { overflow: hidden; }
   /* Header: name | star | nav in a 3-column grid so nothing can overlap */
   .site-header { height: auto; min-height: 72px; padding-block: 14px; display: grid;
     grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 8px; }
-  .site-header .star { position: static; translate: none; grid-column: 2; grid-row: 1; }
+  .site-header .star { position: fixed; top: 36px; left: 50%; translate: -50% -50%; }
   .site-header #home { justify-self: start; padding-left: 0; }
   .site-header nav { grid-column: 3; justify-self: end; }
   /* Footer: star on top, Merci and links centred in one row below; wraps centred on very small phones */
@@ -342,30 +371,4 @@ body.has-modal { overflow: hidden; }
   .theme { padding: 6px; }
 }
 
-/* Hero colour drift (fallback without WebGL): CSS gradients on composited layers (smooth, no per-frame filter work) */
-.hero { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; isolation: isolate;
-  background: linear-gradient(333deg, #001799 18%, #0026ff 51%); }
-.hero .blob { position: absolute; border-radius: 50%; will-change: transform; pointer-events: none; }
-.hero .blob--pink { left: 8%; top: -50%; width: 190%; height: 190%;
-  background: radial-gradient(closest-side, #f0147f 0%, #ec1680 45%, rgba(236,22,128,.6) 68%, rgba(236,22,128,0) 100%);
-  animation: drift-pink 22s cubic-bezier(.45,0,.55,1) infinite alternate; }
-.hero .blob--orange { left: -26%; top: 56%; width: 142%; height: 116%;
-  background: radial-gradient(closest-side, #ff6a00 0%, #ff6a00 55%, rgba(255,106,0,.6) 75%, rgba(255,106,0,0) 100%);
-  animation: drift-orange 17s cubic-bezier(.45,0,.55,1) infinite alternate; }
-/* the liquid gradient draws over the CSS one once WebGL is running; then the blobs and the grain layer are not needed */
-.hero__fluid { position: absolute; inset: 0; width: 100%; height: 100%; display: none; pointer-events: none; }
-.hero.has-fluid .hero__fluid { display: block; }
-.hero.has-fluid .blob, .hero.has-fluid .grain { display: none; }
-.hero .grain { position: absolute; inset: 0; opacity: .07; mix-blend-mode: soft-light; pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
-@keyframes drift-pink {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(-6%, 6%, 0) scale(1.05); }
-  100% { transform: translate3d(4%, 10%, 0) scale(.97); }
-}
-@keyframes drift-orange {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(10%, -6%, 0) scale(1.04); }
-  100% { transform: translate3d(-6%, -10%, 0) scale(1.07); }
-}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
