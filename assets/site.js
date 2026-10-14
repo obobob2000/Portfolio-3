@@ -561,3 +561,141 @@ try {
   });
 })();
 } catch (e) { console.error(e); }
+try {
+/* Sonnenlauf on the iPhone: the widget runs through one day and stops at each of its moods from the Figma file
+   (06:10 Blaue Stunde, 07:22 Goldene Stunde, 14:10 Mittagssonne, 19:45 Goldene Stunde, 20:55 Blaue Stunde, 23:59 Nacht).
+   At each stop the clock ticks in real seconds for a moment, then time runs fast to the next one: the sky colours,
+   the grid, the glow, the label and the temperature follow, and the sun (by night the moon) travels along the arc,
+   with the arc's bright point always under it. A click jumps to the next stop. Pauses off screen; with reduced
+   motion it rests at the first stop and a click switches stops without animating. */
+(() => {
+  const tile = document.getElementById('snl');
+  if (!tile) return;
+  const phone = tile.querySelector('.ip'), screen = tile.querySelector('.ip__screen');
+  const fit = () => phone.style.setProperty('--s', (tile.clientWidth * .78 / 414).toFixed(4));
+  fit();
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(tile); else addEventListener('resize', fit);
+
+  const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const P = {
+    nacht:  { a: '#0420a7', b: '#01071f', g: '#6b75a0', glow: '#ffffff' },
+    blau:   { a: '#8fbfff', b: '#005dc1', g: '#81acda', glow: '#438cde' },
+    gold:   { a: '#95a7ff', b: '#ff6a00', g: '#edbea6', glow: '#e47a42' },
+    mittag: { a: '#fead85', b: '#ffcb0d', g: '#f7f7f7', glow: '#ffc917' }
+  };
+  for (const k in P) for (const c in P[k]) P[k][c] = hex(P[k][c]);
+  const COL = [[0, 'nacht'], [5, 'nacht'], [6.17, 'blau'], [7.37, 'gold'], [10.5, 'mittag'], [16.5, 'mittag'], [19.75, 'gold'], [20.92, 'blau'], [22.4, 'nacht'], [24, 'nacht']];
+  const TEMP = [[0, 13], [4, 10], [6.17, 9], [7.37, 11], [14.17, 25], [17, 23], [19.75, 19], [20.92, 17], [23.99, 14], [24, 13]];
+  const keyed = (keys, h, f) => { for (let i = 1; i < keys.length; i++) if (h <= keys[i][0]) { const [h0, v0] = keys[i - 1], [h1, v1] = keys[i]; return f(v0, v1, h1 > h0 ? (h - h0) / (h1 - h0) : 0); } return f(keys[keys.length - 1][1], keys[keys.length - 1][1], 0); };
+  const mix = (x, y, t) => x.map((v, i) => Math.round(v + (y[i] - v) * t));
+  const css = c => 'rgb(' + c.join(',') + ')';
+  const colours = h => keyed(COL, h, (p, q, t) => { const o = {}; for (const c in P[p]) o[c] = mix(P[p][c], P[q][c], t * t * (3 - 2 * t)); return o; });
+  const temp = h => Math.round(keyed(TEMP, h, (x, y, t) => x + (y - x) * t));
+  /* sun by day (5:36 to 21:30), moon by night; angle on the arc (pi = far left), keyed so the stops sit exactly where Figma has them */
+  const SUN = [[5.6, 2.98], [6.17, 2.57], [7.37, 2.153], [14.17, 1.37], [19.75, .62], [20.92, .3], [21.5, .1]];
+  const MOON = [[21.5, 2.98], [23.99, 1.667], [29.6, .1]];
+  const lerpK = (keys, h) => keyed(keys, h, (x, y, t) => x + (y - x) * t);
+  const ramp = (h, a, b) => Math.max(0, Math.min(1, (h - a) / (b - a)));
+  const body = h => {
+    if (h >= 5.6 && h < 21.5) return { a: lerpK(SUN, h), o: Math.min(ramp(h, 5.6, 5.95), 1 - ramp(h, 21.15, 21.5)), moon: false };
+    const n = h < 5.6 ? h + 24 : h;
+    return { a: lerpK(MOON, n), o: Math.min(ramp(n, 21.5, 21.85), 1 - ramp(n, 29.25, 29.6)), moon: true };
+  };
+  const LABELS = [[5.5, 'nacht'], [6.8, 'blau'], [9, 'gold'], [18.5, 'mittag'], [20.5, 'gold'], [21.8, 'blau'], [24, 'nacht']];
+  const ICO = tile.querySelector('.sw__lbl .sw__ico').outerHTML;
+  const svgOf = paths => ICO.replace(/(<svg[^>]*>)[\s\S]*<\/svg>/, '$1' + paths + '</svg>');
+  const ICONS = {
+    blau: svgOf('<circle cx="12" cy="12" r="4"/><path d="M12 4h.01"/><path d="M20 12h.01"/><path d="M12 20h.01"/><path d="M4 12h.01"/><path d="M17.657 6.343h.01"/><path d="M17.657 17.657h.01"/><path d="M6.343 17.657h.01"/><path d="M6.343 6.343h.01"/>'),
+    gold: svgOf('<circle cx="12" cy="12" r="4"/><path d="M12 3v1"/><path d="M12 20v1"/><path d="M3 12h1"/><path d="M20 12h1"/><path d="m18.364 5.636-.707.707"/><path d="m6.343 17.657-.707.707"/><path d="m5.636 5.636.707.707"/><path d="m17.657 17.657.707.707"/>'),
+    mittag: svgOf('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>'),
+    nacht: svgOf('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>')
+  };
+  const TEXT = { blau: '<b>Blaue</b> Stunde', gold: '<b>Goldene</b> Stunde', mittag: '<b>Mittags</b>sonne', nacht: '<b>Nacht</b>' };
+  const label = h => { for (const [e, k] of LABELS) if (h < e) return k; return 'nacht'; };
+
+  const widgets = [...tile.querySelectorAll('.sw')].map(w => {
+    const svg = w.querySelector('.sw__arc'), d = svg.dataset;
+    return { w, sun: w.querySelector('.sw__sun'), peak: w.querySelector('.sw__peak'), time: w.querySelector('.sw__time'), tmp: w.querySelector('.sw__temp'), lbl: w.querySelector('.sw__lbl'),
+      cx: +d.cx, cy: +d.cy, r: +d.r, ry: +d.ry };
+  });
+  const clock = tile.querySelector('.ip__clock');
+  const pad = n => String(n).padStart(2, '0');
+  let shownLabel = 'blau', shownTime = '', shownTemp = '', shownLook = '';
+  const swapLabel = k => {
+    shownLabel = k;
+    widgets.forEach(u => u.lbl.classList.add('is-out'));
+    setTimeout(() => widgets.forEach(u => { u.lbl.innerHTML = '<span>' + TEXT[shownLabel] + '</span>' + ICONS[shownLabel]; u.lbl.classList.remove('is-out'); }), 280);
+  };
+  const render = sec => {
+    sec = ((sec % 86400) + 86400) % 86400;
+    const h = sec / 3600, c = colours(h);
+    const look = css(c.a) + '|' + css(c.b) + '|' + css(c.g) + '|' + css(c.glow);
+    if (look !== shownLook) {   // only touch the styles when a colour actually changed, and only on the two widgets
+      shownLook = look;
+      widgets.forEach(u => { const st = u.w.style; st.setProperty('--a', css(c.a)); st.setProperty('--b', css(c.b)); st.setProperty('--g', css(c.g)); st.setProperty('--glow', css(c.glow)); });
+    }
+    const s = body(h);
+    widgets.forEach(u => {
+      const x = u.cx + u.r * Math.cos(s.a), y = u.cy - u.ry * Math.sin(s.a);
+      u.sun.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')');
+      u.sun.style.opacity = s.o.toFixed(3);
+      u.peak.setAttribute('offset', ((x - (u.cx - u.r)) / (2 * u.r)).toFixed(3));
+    });
+    const t = pad(Math.floor(h)) + ':' + pad(Math.floor(sec / 60) % 60) + ':' + pad(Math.floor(sec) % 60);
+    if (t !== shownTime) { shownTime = t; widgets.forEach(u => u.time.textContent = t); clock.textContent = t.slice(0, 5); }
+    const tp = temp(h) + '°';
+    if (tp !== shownTemp) { shownTemp = tp; widgets.forEach(u => u.tmp.textContent = tp); }
+    const k = label(h);
+    if (k !== shownLabel) swapLabel(k);
+  };
+
+  /* long-press resize, timed like the screen recording */
+  const finger = tile.querySelector('.ip__finger'), sizes = [...tile.querySelectorAll('.ip__size')];
+  const at = (x, y) => { finger.style.left = x + 'px'; finger.style.top = y + 'px'; };
+  let busy = false;
+  const resize = () => {
+    if (busy) return; busy = true;
+    const small = screen.classList.contains('is-small'), steps = [];
+    const later = (ms, f) => steps.push(setTimeout(f, ms));
+    sizes.forEach(b => b.classList.toggle('is-on', b.dataset.size === (small ? 's' : 'm')));
+    at(small ? 105 : 195, 145); finger.classList.add('is-on');
+    later(120, () => { finger.classList.add('is-tap'); screen.classList.add('is-press'); });
+    later(600, () => { screen.classList.remove('is-press'); screen.classList.add('is-menu'); finger.classList.remove('is-on', 'is-tap'); });
+    later(1250, () => { at(small ? 89 : 39, 264); finger.classList.add('is-on'); });
+    later(1750, () => { finger.classList.add('is-tap'); sizes.forEach(b => b.classList.toggle('is-on', b.dataset.size === (small ? 'm' : 's'))); });
+    later(2000, () => { finger.classList.remove('is-on', 'is-tap'); screen.classList.remove('is-menu'); });
+    later(2200, () => { screen.classList.toggle('is-small'); busy = false; });
+  };
+  const STOPS = [22211, 26532, 51020, 71100, 75300, 86370];   // 06:10:11, 07:22:12, 14:10:20, 19:45:00, 20:55:00, 23:59:30
+  const HOLD = 3200, MOVE = 2600;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  let i = 0, phase = 'hold', t0 = 0, from = STOPS[0], raf = 0, on = false, el = 0, prev = 0;
+  const target = j => { let s = STOPS[j % STOPS.length]; while (s <= from) s += 86400; return s; };
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  render(STOPS[0]);
+
+  const frame = now => {
+    if (prev) el += Math.min(now - prev, 100);
+    prev = now;
+    const d = el - t0;
+    if (phase === 'hold') {
+      render(from + Math.floor(d / 1000));
+      if (d >= HOLD) { phase = 'move'; t0 = el; from += Math.floor(HOLD / 1000); }
+    } else {
+      const to = target(i + 1), p = Math.min(1, d / MOVE);
+      render(from + (to - from) * ease(p));
+      if (p >= 1) { i = (i + 1) % STOPS.length; from = STOPS[i]; phase = 'hold'; t0 = el; if (i % 2 === 0) resize(); }
+    }
+    if (on) raf = requestAnimationFrame(frame); else { raf = 0; prev = 0; }
+  };
+  tile.addEventListener('click', () => {
+    if (reduce.matches) { i = (i + 1) % STOPS.length; from = STOPS[i]; render(from); return; }
+    if (phase === 'hold') { phase = 'move'; t0 = el; }
+  });
+  if (reduce.matches || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(es => {
+    on = es.some(e => e.isIntersecting);
+    if (on && !raf) raf = requestAnimationFrame(frame);
+  }, { threshold: .2 }).observe(tile);
+})();
+} catch (e) { console.error(e); }
