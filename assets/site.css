@@ -3,12 +3,12 @@
 :root {
   color-scheme: light;
   --u: min(calc(100vw / 1920), 1px);
-  --bg: #ffffff;
+  --bg: #ededed;
   --ink-muted: #7f7f7f;
   --line: #d9d9d9;
   --blue: #0124f1;
   --on-blue: #ffffff;
-  --tile-grey: #f6f6f6;
+  --tile-grey: #ffffff;
   --tile-sky: #eef6ff;
   --tile-cream: #fff8eb;
   --salut: #538bca;
@@ -172,6 +172,143 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .stk__said { display: flex; flex-direction: column; gap: .5em; }
 .stk__text { font-family: var(--font-display); font-weight: 700; font-size: max(20px, calc(40 * var(--u))); line-height: 1.08; letter-spacing: -.01em; text-wrap: balance; }
 @media (hover: hover) { .tile--stack:hover .stk__card.is-top { transform: perspective(1400px) translateY(-1.5%) rotate(-1.5deg) rotateY(var(--f)); } }
+/* ---- Sonnenlauf: iPhone home screen with the Sonnenlauf widget (Figma "Sonne" 853:1183), running through a day ---- */
+.tile--snl { padding: 0; border: 0; font: inherit; color: inherit; width: 100%; cursor: pointer; background: var(--tile-grey); -webkit-tap-highlight-color: transparent; }
+.tile--snl:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+/* the phone is drawn at iPhone size (390 × 844 pt screen) and scaled to the tile by JS (--s); its lower part runs off the tile */
+.ip { position: absolute; left: 50%; top: 9%; width: 414px; height: 868px; transform: translateX(-50%) scale(var(--s, .75)); transform-origin: 50% 0;
+  border-radius: 64px; background: #0e0e10; box-shadow: inset 0 0 0 2px #46464b, inset 0 0 0 4px #1b1b1d, 0 30px 60px -20px rgba(20, 20, 40, .35); pointer-events: none; }
+.ip__screen { position: absolute; inset: 12px; border-radius: 52px; overflow: hidden;
+  background: linear-gradient(180deg, var(--wa, #e6eefb) 0%, var(--wb, #dfe8f5) 100%); font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', BlinkMacSystemFont, 'Helvetica Neue', 'Inter', system-ui, sans-serif; color: #111; }
+.ip__bar { position: absolute; left: 0; right: 0; top: 0; height: 54px; }
+.ip__island { position: absolute; left: 50%; top: 11px; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; }
+.ip__clock { position: absolute; left: 52px; top: 18px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.ip__stat { position: absolute; right: 30px; top: 19px; display: flex; gap: 6px; align-items: center; fill: currentColor; color: #111; }
+.ip__w { position: absolute; display: block; }
+.ip__w--m { left: 0; top: 0; width: 338px; height: 158.6px; transition: opacity .5s ease; }
+.ip__w--s { left: 0; top: 0; width: 158px; height: 158px; opacity: 0; transition: opacity .5s ease; }
+/* the Sonnenlauf widget switches between its large and its small size like an iOS widget being resized: the slot narrows, the large layout fades into the small one,
+   and the music widget moves up next to it; the cycling widget below stays put */
+/* the slot keeps the large size; the small size is a clip (no layout work while it animates, so the resize stays smooth) */
+.ip__sl { position: absolute; left: 26px; top: 66px; width: 338px; height: 158.6px; clip-path: inset(0 0 0 0 round 22.5px); will-change: clip-path, transform;
+  transition: clip-path .7s cubic-bezier(.34,1.18,.5,1), transform .3s cubic-bezier(.2,.8,.2,1); z-index: 3; transform-origin: 169px 79px; }
+.ip__sl .sw { box-shadow: none; }
+.ip__screen.is-small .ip__sl { clip-path: inset(0 180px .6px 0 round 22.5px); transform-origin: 79px 79px; }
+.ip__screen.is-small .ip__w--m { opacity: 0; }
+.ip__screen.is-small .ip__w--s { opacity: 1; }
+.ip__screen.is-small .ip__music { transform: translate(180px, -180px); }
+.ip__screen.is-small .ip__ride { transform: translateY(-180px); }
+.ip__w--m .sw { transform: scale(.39243); }
+.ip__w--s .sw { transform: scale(.39080); }
+.ip__music { will-change: transform; text-align: left; position: absolute; left: 26px; top: 246px; transition: transform .7s cubic-bezier(.34,1.18,.5,1), filter .3s ease, opacity .3s ease; width: 158px; height: 158px; border-radius: 22px; box-sizing: border-box; padding: 14px;
+  background: linear-gradient(160deg, #1d3fa8 0%, #12204f 55%, #121212 100%); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.12); overflow: hidden; }
+.ip__cover { display: block; width: 64px; height: 64px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,.35); }
+.ip__eq { position: absolute; right: 16px; top: 16px; display: flex; gap: 3px; align-items: flex-end; height: 16px; }
+.ip__eq i { width: 3px; height: 100%; border-radius: 2px; background: #1ed760; transform-origin: 50% 100%; animation: ip-eq 1s ease-in-out infinite; }
+.ip__eq i:nth-child(2) { animation-delay: -.35s; } .ip__eq i:nth-child(3) { animation-delay: -.7s; }
+@keyframes ip-eq { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+.ip__track { display: block; margin-top: 12px; font-size: 14px; font-weight: 600; line-height: 1.15; }
+.ip__artist { display: block; font-size: 11.5px; line-height: 1.3; color: rgba(255,255,255,.65); white-space: nowrap; }
+.ip__prog { position: absolute; left: 14px; right: 14px; bottom: 14px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.22); overflow: hidden; }
+.ip__prog i { display: block; height: 100%; width: 100%; background: #fff; transform-origin: 0 50%; animation: ip-prog 30s linear infinite; }
+@keyframes ip-prog { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .ip__eq i, .ip__prog i { animation: none; } .ip__prog i { transform: scaleX(.4); } }
+.ip__ride { will-change: transform; position: absolute; left: 26px; top: 426px; transition: transform .7s cubic-bezier(.34,1.18,.5,1), filter .3s ease, opacity .3s ease; width: 338px; height: 158px; border-radius: 22px; box-sizing: border-box; padding: 14px 16px; text-align: left;
+  background: #fff; color: #1b1b1f; box-shadow: 0 2px 8px rgba(0,0,0,.08); overflow: hidden; }
+.ip__ride-head { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: #fc4c02; }
+.ip__bike { width: 16px; height: 16px; }
+.ip__ride-stats { display: flex; gap: 12px; margin-top: 10px; }
+.ip__ride-stats > span { font-size: 11px; color: #6b6b73; line-height: 1.1; }
+.ip__ride-stats b { font-size: 17px; font-weight: 600; color: #1b1b1f; letter-spacing: -.02em; }
+.ip__ride-stats small { display: block; font-size: 10px; margin-top: 2px; }
+.ip__ride-week { position: absolute; left: 16px; bottom: 14px; display: flex; gap: 6px; align-items: flex-end; height: 34px; }
+.ip__ride-week i { width: 14px; height: calc(4px + var(--h) * 30px); border-radius: 3px; background: color-mix(in srgb, #fc4c02 calc(25% + var(--h) * 75%), #f1f1f4); }
+.ip__route { position: absolute; right: 14px; top: 14px; width: 100px; height: 130px; border-radius: 14px; background: #f3f3f6; }
+.ip__route-line { stroke-dasharray: 100; stroke-dashoffset: 0; animation: ip-route 7s ease-in-out infinite; }
+@keyframes ip-route { 0% { stroke-dashoffset: 100; } 55%, 100% { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .ip__route-line { animation: none; } }
+/* iOS long-press, as in Olivier's screen recording: the widget lifts, the rest of the home screen dims, a menu with the widget sizes
+   opens underneath, a finger taps the other size, the menu closes and the widget springs to its new size while the others reflow */
+.ip__dim { position: absolute; inset: 0; z-index: 2; background: rgba(10,10,20,.3); opacity: 0; transition: opacity .3s ease; }
+.ip__screen.is-menu .ip__dim { opacity: 1; }
+.ip__screen.is-press .ip__sl { transform: scale(.97); }
+.ip__screen.is-menu .ip__sl { transform: scale(1.071, 1.15); }
+.ip__screen.is-small.is-menu .ip__sl { transform: scale(1.15); }
+/* iOS 26 "Liquid Glass" context menu: big radius, clear glass that lets the home screen show through, a light rim, no separators */
+.ip__menu { position: absolute; left: 14px; top: 246px; z-index: 3; width: 272px; padding: 7px 0 14px; border-radius: 28px; overflow: hidden; text-align: left; white-space: nowrap;
+  background: linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,255,255,.34));
+  -webkit-backdrop-filter: blur(16px) saturate(1.8); backdrop-filter: blur(16px) saturate(1.8);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.65), inset 0 1.5px 1px rgba(255,255,255,.9), inset 0 -10px 20px rgba(255,255,255,.18), 0 16px 40px rgba(0,0,0,.18);
+  font-size: 15px; letter-spacing: -.01em; color: #111; opacity: 0; transform: scale(.6); transform-origin: 0 0; transition: opacity .22s ease, transform .35s cubic-bezier(.34,1.3,.5,1); }
+.ip__screen.is-menu .ip__menu { opacity: 1; transform: scale(.74); }
+.ip__sizes { display: flex; justify-content: space-between; padding: 0 14px 12px; }
+.ip__size { width: 38px; height: 34px; border-radius: 10px; display: grid; place-items: center; transition: background-color .2s ease; }
+.ip__size svg { width: 26px; height: 24px; fill: none; stroke: #1c1c1e; stroke-width: 1.7; stroke-linecap: round; }
+.ip__size.is-on { background: rgba(255,255,255,.6); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.ip__size--x svg { opacity: .35; }
+.ip__mi { display: flex; align-items: center; gap: 13px; height: 36px; padding: 0 20px; }
+.ip__mi svg { width: 17px; height: 17px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ip__mi--del { color: #e5342b; }
+.ip__finger { position: absolute; z-index: 4; left: 0; top: 0; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%;
+  background: rgba(255,255,255,.55); box-shadow: 0 0 0 1.5px rgba(0,0,0,.12), 0 4px 14px rgba(0,0,0,.18); opacity: 0; transform: scale(.6);
+  transition: opacity .2s ease, transform .2s ease, left .45s cubic-bezier(.4,0,.2,1), top .45s cubic-bezier(.4,0,.2,1); }
+.ip__finger.is-on { opacity: 1; transform: scale(1); }
+.ip__finger.is-tap { transform: scale(.82); }
+/* wallpaper in the spirit of the iOS default ones (an original composition, not Apple artwork): soft colour fields, strongly blurred */
+.ip__wall { position: absolute; inset: -60px; filter: blur(34px);
+  background:
+    radial-gradient(55% 38% at 25% 20%, #5a6fb8 0%, rgba(90,111,184,0) 100%),
+    radial-gradient(60% 45% at 80% 55%, #3b4f9a 0%, rgba(59,79,154,0) 100%),
+    radial-gradient(50% 40% at 30% 85%, #6a6aa8 0%, rgba(106,106,168,0) 100%),
+    linear-gradient(180deg, #2b3566 0%, #232c58 55%, #1a2046 100%);
+  transform: translateZ(0); }
+@keyframes ip-wall { from { transform: translate(0, 0) scale(1); } to { transform: translate(-14px, 18px) scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .ip__wall { animation: none; } }
+.ip__screen .ip__clock, .ip__screen .ip__stat { color: #fff; }
+.ip__dots { background: rgba(255,255,255,.18) !important; }
+.ip__dots i { background: rgba(255,255,255,.45) !important; }
+.ip__dots i.on { background: #fff !important; }
+.ip__dots { position: absolute; left: 50%; top: 610px; transform: translateX(-50%); display: flex; gap: 8px; padding: 7px 10px; border-radius: 12px; background: rgba(0,0,0,.08); }
+.ip__dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,.25); }
+.ip__dots i.on { background: rgba(0,0,0,.7); }
+
+/* the widget itself, in Figma units (861.3 × 404.3 and 404.3 × 404.3), scaled down into its iOS slot */
+.sw { position: absolute; left: 0; top: 0; overflow: hidden; border-radius: 57.42px; transform-origin: 0 0; color: #fff;
+  background: linear-gradient(180deg, var(--a, #8fbfff) 0%, var(--b, #005dc1) 100%); box-shadow: 0 5.71px 8.56px rgba(0, 0, 0, .2);
+  font-family: 'Hanken Grotesk', system-ui, sans-serif; }
+.sw--m { width: 861.3px; height: 404.3px; }
+.sw--s { width: 404.3px; height: 404.3px; }
+.sw__grid { position: absolute; left: 0; top: 0; fill: var(--g, #81acda); opacity: .3; }
+.sw__arc { position: absolute; left: 0; top: 0; overflow: visible; }
+.sw__glow { fill: var(--glow, #438cde); }
+.sw__sun { transition: opacity .35s ease; }
+/* glass pills: Figma "Glass" + a soft light inner shadow at the top */
+.sw__pill { position: absolute; border-radius: 36.61px; box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.05));
+  box-shadow: inset 0 1.5px 0 rgba(255,255,255,.38), inset 0 -1px 0 rgba(255,255,255,.10), inset 0 18px 30px -20px rgba(230,230,230,.55), 0 4px 14px rgba(0,0,0,.06);
+}
+.sw__time { font-family: 'Bitcount Single', monospace; font-weight: 300; font-variation-settings: 'CRSV' 0, 'ELSH' 0, 'ELXP' 0; line-height: .95; white-space: nowrap; display: block; text-align: center; font-variant-numeric: tabular-nums; }
+.sw__row { display: flex; align-items: center; white-space: nowrap; line-height: .95; }
+.sw__ico { flex: none; }
+.sw__lbl { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; white-space: nowrap; font-weight: 300; line-height: .95; transition: opacity .28s ease; }
+.sw__lbl b { font-weight: 700; }
+.sw__lbl.is-out { opacity: 0; }
+
+.sw--m .sw__pill--time { left: 38.28px; top: 38.28px; width: 555.06px; height: 172.26px; display: flex; align-items: center; justify-content: center; padding-top: 14.6px; }
+.sw--m .sw__time { font-size: 83.71px; letter-spacing: 8.37px; margin-right: -8.37px; }
+.sw--m .sw__pill--info { left: 612.48px; top: 38.28px; width: 210.54px; height: 172.26px; padding: 19.14px 38.28px; display: flex; flex-direction: column; justify-content: center; gap: 19.14px; font-size: 29.29px; }
+.sw--m .sw__row { gap: 9.57px; height: 28px; }
+.sw--m .sw__row .sw__ico { width: 18.05px; height: 18.05px; }
+.sw--m .sw__lbl { top: 337.34px; height: 28px; font-size: 29.29px; gap: 7.18px; }
+.sw--m .sw__lbl .sw__ico { width: 23.93px; height: 23.93px; }
+
+.sw--s .sw__pill--time { left: 38.28px; top: 38.28px; width: 327.77px; height: 71.78px; display: flex; align-items: center; justify-content: center; padding-top: 7px; }
+.sw--s .sw__time { font-size: 39.78px; letter-spacing: 3.98px; margin-right: -3.98px; }
+.sw--s .sw__pill--info { left: 38.28px; top: 129.19px; width: 327.77px; height: 71.78px; padding: 0 19.14px; display: flex; align-items: center; justify-content: space-between; font-size: 26.32px; }
+.sw--s .sw__row { gap: 4.55px; height: 25px; }
+.sw--s .sw__row .sw__ico { width: 19.14px; height: 19.14px; }
+.sw--s .sw__lbl { top: 337.34px; height: 25px; font-size: 26.32px; gap: 7.18px; }
+.sw--s .sw__lbl .sw__ico { width: 23.93px; height: 23.93px; }
 /* Grid: 3 columns x 3 rows of 550px tiles */
 .grid {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -203,7 +340,7 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .kz-frame { aspect-ratio: 418 / 872; height: auto; border: 0; display: block; background: #000; border-radius: 12.92% / 6.19%; color-scheme: light; }
 /* once the prototype has loaded it draws the phone itself; the black box underneath would show as a hairline at the edge */
 .kz-frame.is-ready { background: transparent; border-radius: 0; }
-.tile--phone { background: var(--tile-phone); }
+.tile--phone { background: var(--tile-phone); background: linear-gradient(180deg, #d8d5ff 0%, #b2abf6 100%); }
 .tile--phone .kz-frame { width: calc(227.3 * var(--u)); pointer-events: none; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
 .tile__hit { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; border-radius: inherit; background: none; font: inherit; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
 .tile__hit:focus-visible { outline: 2px solid var(--blue); outline-offset: -4px; }
