@@ -525,16 +525,14 @@ body.has-modal { overflow: hidden; }
 /* wide overlay: the first state fills the first view, the other states follow one per row */
 .modal__ipad { display: block; width: calc(740 * var(--m)); height: auto; aspect-ratio: 1600 / 1213; }
 #wide-modal .modal__hero { padding-block: calc(60 * var(--m)); gap: calc(48 * var(--m)); }
-.modal__screens--wide { grid-template-columns: calc(740 * var(--m)); row-gap: calc(64 * var(--m)); }
-.modal__screens--wide img { aspect-ratio: 1600 / 1213; }
+
 @media (max-width: 800px) {
   #wide-modal .modal__card { --h: min(calc(var(--s) * 1.62), calc(100vh - 32px)); --h: min(calc(var(--s) * 1.62), calc(100dvh - 32px)); }
   #wide-modal .modal__hero { padding-block: 80px 24px; gap: 24px; justify-content: flex-start; }
   .modal__ipad { width: calc(100% - 32px); }
-  .modal__screens--wide { grid-template-columns: 1fr; gap: 20px; padding: 4px 16px 28px; }
 }
 /* the iPad stills and the video carry white corners outside the rounded frame: clip them to the frame radius (50 of 1414 × 1072) */
-.modal__ipad, .modal__screens--wide img, .wd__video { border-radius: 3.6% / 4.75%; }
+.modal__ipad, .wd__video { border-radius: 3.6% / 4.75%; }
 /* close button as frosted glass, so the screens stay visible behind it while scrolling */
 :root { --glass: rgba(255, 255, 255, .55); --glass-edge: rgba(255, 255, 255, .7); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --glass: rgba(24, 24, 30, .5); --glass-edge: rgba(255, 255, 255, .12); } }
@@ -563,3 +561,29 @@ body.has-modal { overflow: hidden; }
 /* the X stays in the top right corner of every overlay while its content scrolls, without the grey ring */
 .modal__close { z-index: 5; }
 .modal__close svg rect, .modal__close:hover svg rect { stroke: transparent; }
+
+/* wide overlay, below the first view: the flow as zoomed-in details on light panels, numbered, in a two-column grid */
+.wd-steps { grid-template-columns: repeat(2, calc(358 * var(--m))); gap: calc(56 * var(--m)) calc(24 * var(--m)); counter-reset: none; }
+.wd-step { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.wd-step--full { grid-column: 1 / -1; }
+.wd-step__panel { display: grid; place-items: center; border-radius: calc(36 * var(--m)); overflow: hidden;
+  background: radial-gradient(80% 90% at 50% 45%, #fff8f4 0%, #f3f3f3 60%, #ececec 100%); padding: calc(34 * var(--m)); }
+.wd-step--half .wd-step__panel { aspect-ratio: 1 / 1.08; }
+.wd-step__panel img { display: block; aspect-ratio: auto; max-width: 100%; height: auto; max-height: calc(330 * var(--m)); width: auto;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(180deg, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(180deg, transparent, #000 10%, #000 90%, transparent); mask-composite: intersect; }
+.wd-step--full .wd-step__panel img { width: calc(620 * var(--m)); max-height: none; }
+.wd-step__cap { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink-muted); text-wrap: pretty; }
+.wd-step__cap b { color: var(--pill-bg); font-weight: 700; }
+.wd-step__no { display: inline-block; margin-right: 8px; font: 700 12px/1 var(--font-display); color: #fe5206; letter-spacing: .04em; }
+@media (max-width: 800px) {
+  .wd-steps { grid-template-columns: 1fr; gap: 28px; padding: 4px 16px 28px; }
+  .wd-step--full { grid-column: auto; }
+  .wd-step__panel { border-radius: 20px; padding: 18px; }
+  .wd-step--half .wd-step__panel { aspect-ratio: auto; }
+  .wd-step--full .wd-step__panel img { width: 100%; }
+  .wd-step__panel img { max-height: 300px; }
+}
+.wd-steps li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: stretch; width: auto; }
+.wd-step--full .wd-step__panel img { width: 100%; }
+.wd-step:last-child .wd-step__panel img { width: 78%; }
