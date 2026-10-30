@@ -522,7 +522,7 @@ body.has-modal { overflow: hidden; }
 .tile--wide .tile__hit { z-index: 2; }
 @media (max-width: 800px) {
   .tile--wide { grid-column: auto; aspect-ratio: 1 / 1; }
-  .wd__device { left: 8%; top: 9%; width: 108%; }
+  .wd__device { left: 6%; top: 50%; width: 88%; translate: 0 -50%; }
 }
 /* wide overlay: the first state fills the first view, the other states follow one per row */
 .modal__ipad { display: block; width: calc(740 * var(--m)); height: auto; aspect-ratio: 1600 / 1213; }
