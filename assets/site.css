@@ -537,3 +537,9 @@ body.has-modal { overflow: hidden; }
 }
 /* the iPad stills and the video carry white corners outside the rounded frame: clip them to the frame radius (50 of 1414 × 1072) */
 .modal__ipad, .modal__screens--wide img, .wd__video { border-radius: 3.6% / 4.75%; }
+/* close button as frosted glass, so the screens stay visible behind it while scrolling */
+:root { --glass: rgba(255, 255, 255, .55); --glass-edge: rgba(255, 255, 255, .7); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --glass: rgba(24, 24, 30, .5); --glass-edge: rgba(255, 255, 255, .12); } }
+:root[data-theme="dark"] { --glass: rgba(24, 24, 30, .5); --glass-edge: rgba(255, 255, 255, .12); }
+.modal__close { background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: inset 0 1px 0 var(--glass-edge), 0 4px 14px rgba(0, 0, 0, .12); }
