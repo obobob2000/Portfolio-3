@@ -595,7 +595,8 @@ body.has-modal { overflow: hidden; }
 
 /* Big running type above the footer: one line of large display type that drifts left in an endless loop, every second phrase as an outline */
 .ticker { display: block; text-decoration: none; cursor: pointer; overflow: hidden; padding-block: calc(20 * var(--u)); margin-block: calc(20 * var(--u)) calc(-20 * var(--u)); }
-.ticker__track { display: flex; width: max-content; animation: ticker 110s linear infinite; }
+.ticker__track { display: flex; width: max-content; animation: ticker 110s linear infinite; animation-play-state: paused; }
+.ticker.is-running .ticker__track { animation-play-state: running; }
 .ticker:hover .ticker__track, .ticker:focus-visible .ticker__track { animation-play-state: paused; }
 .ticker:focus-visible { outline: 2px solid var(--blue); outline-offset: -4px; }
 .ticker:hover .ticker__word--line { color: var(--pill-bg); }

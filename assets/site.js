@@ -775,3 +775,13 @@ try {
   });
 })();
 } catch (e) { console.error(e); }
+
+try {
+/* Running type: starts moving only once it scrolls into view, and rests again while it is off screen */
+(() => {
+  const t = document.querySelector('.ticker');
+  if (!t) return;
+  if (!('IntersectionObserver' in window)) { t.classList.add('is-running'); return; }
+  new IntersectionObserver(es => es.forEach(e => t.classList.toggle('is-running', e.isIntersecting)), { threshold: 0.35 }).observe(t);
+})();
+} catch (e) { console.error(e); }
