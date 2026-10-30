@@ -742,3 +742,33 @@ try {
   });
 })();
 } catch (e) { console.error(e); }
+
+try {
+/* About overlay: the name in the header opens a short introduction; veil, X or Escape close it */
+(() => {
+  const modal = document.getElementById('about-modal'), opener = document.getElementById('home');
+  if (!modal || !opener) return;
+  const closeBtn = modal.querySelector('.modal__close'), card = modal.querySelector('.modal__card');
+  let byKey = false;
+  const open = e => {
+    e.preventDefault();
+    modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('has-modal');
+    (byKey || e.detail === 0 ? closeBtn : card).focus({ preventScroll: true }); byKey = false;
+  };
+  const close = () => {
+    if (!modal.classList.contains('is-open')) return;
+    modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('has-modal');
+    opener.focus({ preventScroll: true });
+  };
+  opener.addEventListener('click', open);
+  opener.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { byKey = true; if (e.key === ' ') { e.preventDefault(); opener.click(); } } });
+  modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
+  document.addEventListener('keydown', e => {
+    if (!modal.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus({ preventScroll: true }); }
+  });
+})();
+} catch (e) { console.error(e); }
