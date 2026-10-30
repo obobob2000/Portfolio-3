@@ -592,3 +592,22 @@ body.has-modal { overflow: hidden; }
 :root { --tile-salut: #2a2a2e; --salut: #f2f2f2; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --tile-salut: #232327; --salut: #f2f2f2; } }
 :root[data-theme="dark"] { --tile-salut: #232327; --salut: #f2f2f2; }
+
+/* Big running type above the footer: one line of large display type that drifts left in an endless loop, every second phrase as an outline */
+.ticker { overflow: hidden; padding-block: calc(20 * var(--u)); margin-block: calc(20 * var(--u)) calc(-20 * var(--u)); }
+.ticker__track { display: flex; width: max-content; animation: ticker 48s linear infinite; }
+.ticker:hover .ticker__track { animation-play-state: paused; }
+.ticker__group { display: flex; align-items: center; flex: none; }
+.ticker__word { font: 700 calc(190 * var(--u))/1 var(--font-display); letter-spacing: -.035em; white-space: nowrap; color: var(--pill-bg); padding-inline: calc(36 * var(--u)); }
+.ticker__word--line { color: transparent; -webkit-text-stroke: max(1.5px, calc(2.5 * var(--u))) var(--pill-bg); }
+.ticker__star { flex: none; width: calc(110 * var(--u)); height: auto; color: var(--blue); animation: ticker-spin 12s linear infinite; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+@keyframes ticker-spin { to { transform: rotate(360deg); } }
+@media (max-width: 800px) {
+  .ticker { padding-block: 8px; margin-block: 8px 0; }
+  .ticker__word { font-size: 64px; padding-inline: 16px; }
+  .ticker__word--line { -webkit-text-stroke-width: 1.5px; }
+  .ticker__star { width: 40px; }
+  .ticker__track { animation-duration: 30s; }
+}
+@media (prefers-reduced-motion: reduce) { .ticker__track, .ticker__star { animation: none; } }
