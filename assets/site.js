@@ -787,18 +787,18 @@ try {
 } catch (e) { console.error(e); }
 
 try {
-/* Heads tile: a click shows the next drawn look in a fixed order and starts over after the last */
+/* Mix-and-match tile: hair, face and shirt each have their own click area and cycle through their options independently */
 (() => {
-  const t = document.getElementById('heads');
+  const t = document.getElementById('mm');
   if (!t) return;
-  const heads = [...t.querySelectorAll('.head')];
-  let i = 0;
-  t.addEventListener('click', () => {
-    heads[i].classList.remove('is-on', 'is-pop');
-    i = (i + 1) % heads.length;
-    heads[i].classList.remove('is-pop'); void heads[i].offsetWidth;
-    heads[i].classList.add('is-on', 'is-pop');
-    t.setAttribute('aria-label', 'Gezeichneter Olivier ' + heads[i].dataset.name + '. Klicken zeigt den nächsten Look');
-  });
+  const LABEL = { hair: 'Frisur', face: 'Gesicht', shirt: 'Shirt' };
+  t.querySelectorAll('.mm__hit').forEach(btn => btn.addEventListener('click', () => {
+    const set = t.querySelector('.mm__set[data-part="' + btn.dataset.part + '"]'), opts = [...set.children];
+    const i = (+set.dataset.i + 1) % opts.length;
+    opts.forEach(o => o.classList.remove('is-on', 'is-pop'));
+    void set.offsetWidth;
+    opts[i].classList.add('is-on', 'is-pop'); set.dataset.i = i;
+    btn.setAttribute('aria-label', LABEL[btn.dataset.part] + ' wechseln, jetzt: ' + opts[i].dataset.name);
+  }));
 })();
 } catch (e) { console.error(e); }

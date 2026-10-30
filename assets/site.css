@@ -616,17 +616,20 @@ body.has-modal { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .ticker__track, .ticker__star { animation: none; } }
 
-/* Heads tile: one drawn head at a time on a light blue gradient; a click swaps to the next look (hair, cap, bald, bald with glasses) */
-.tile--heads { padding: 0; border: 0; width: 100%; cursor: pointer; -webkit-tap-highlight-color: transparent;
-  background: linear-gradient(165deg, #dcecfb 0%, #c4ddf5 100%); }
-.tile--heads:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.head { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block; pointer-events: none; user-select: none;
-  visibility: hidden; transform-origin: 50% 100%; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
-.head.is-on { visibility: visible; }
-.head.is-pop { animation: head-pop .32s cubic-bezier(.3,1.6,.5,1); }
-@keyframes head-pop { 0% { transform: scale(.9); } 100% { transform: none; } }
-@media (max-width: 800px) { .tile--heads { border-radius: 11% / 11%; } }
-@media (prefers-reduced-motion: reduce) { .head.is-pop { animation: none; } }
+/* Mix-and-match tile: the drawn head is stacked from hair, face and shirt layers; a click on each part swaps just that part */
+.tile--mm { background: linear-gradient(165deg, #dcecfb 0%, #c4ddf5 100%); }
+.mm__stage { position: absolute; inset: 0; pointer-events: none; }
+.mm__set, .mm__opt { display: contents; }
+.mm__l { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: none; user-select: none; transform-origin: 50% 100%; }
+.mm__opt.is-on .mm__l { display: block; }
+.mm__back { z-index: 1; } .mm__mid { z-index: 2; } .mm__shirt { z-index: 3; } .mm__front { z-index: 4; }
+.mm__opt.is-pop .mm__l { animation: head-pop .32s cubic-bezier(.3,1.6,.5,1); }
+@keyframes head-pop { 0% { transform: scale(.94); } 100% { transform: none; } }
+.mm__hit { position: absolute; left: 0; right: 0; z-index: 6; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.mm__hit--hair { top: 0; height: 36%; } .mm__hit--face { top: 36%; height: 44%; } .mm__hit--shirt { top: 80%; bottom: 0; }
+.mm__hit:focus-visible { outline: 2px solid var(--blue); outline-offset: -4px; border-radius: 12px; }
+@media (max-width: 800px) { .tile--mm { border-radius: 11% / 11%; } }
+@media (prefers-reduced-motion: reduce) { .mm__opt.is-pop .mm__l { animation: none; } }
 
 /* Overlays: the page blurs first, then the card comes in – quicker than before */
 .modal { transition: opacity .18s ease, visibility 0s linear .2s; }
