@@ -547,3 +547,5 @@ body.has-modal { overflow: hidden; }
   .modal__ipad { width: calc(100% - 32px); }
   .modal__screens--wide { grid-template-columns: 1fr; gap: 20px; padding: 4px 16px 28px; }
 }
+/* the iPad stills and the video carry white corners outside the rounded frame: clip them to the frame radius (50 of 1414 × 1072) */
+.modal__ipad, .modal__screens--wide img, .wd__video { border-radius: 3.6% / 4.75%; }
