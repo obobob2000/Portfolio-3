@@ -92,7 +92,6 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .pill--wide { padding-inline: calc(24 * var(--u)); }
 .pill:hover, .pill:focus-visible { border-color: currentColor; }
 .pill:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
-#home, #home:hover { border-color: transparent; cursor: pointer; }
 .pill--plain:hover { border-color: transparent; }
 .merci { position: relative; }
 .heart { position: absolute; left: 50%; top: 0; width: calc(34 * var(--u)); height: calc(34 * var(--u));
@@ -479,14 +478,13 @@ body.has-modal { overflow: hidden; }
   .site-header { height: auto; min-height: 72px; padding-block: 14px; display: grid;
     grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 8px; }
   .site-header .star { position: fixed; top: 36px; left: 50%; translate: -50% -50%; }
-  .site-header #home { justify-self: start; padding-left: 0; }
+  .site-header #home { justify-self: start; }
   .site-header nav { grid-column: 3; justify-self: end; }
   /* Footer: star on top, Merci and links centred in one row below; wraps centred on very small phones */
   .site-footer { height: auto; padding-block: 20px 24px; display: flex; flex-wrap: wrap;
     justify-content: center; align-items: center; gap: 12px 6px; }
   .site-footer .star { position: static; translate: none; order: -1; flex: 0 0 100%; height: 20px; }
   .site-footer .star svg { width: 20px; margin: 0 auto; }
-  .site-footer .merci { padding-left: 0; } /* no border: text edge counts for optical centring */
   .site-footer nav { flex-wrap: wrap; justify-content: center; }
 }
 @media (max-width: 800px) {
@@ -545,7 +543,9 @@ body.has-modal { overflow: hidden; }
   box-shadow: inset 0 1px 0 var(--glass-edge), 0 4px 14px rgba(0, 0, 0, .12); }
 
 /* About overlay: opened by the name in the header – photo and a short introduction side by side, stacked on phones */
-.modal--about .modal__card { width: calc(1180 * var(--m)); height: auto; --h: auto; max-height: calc(100dvh - 32px); overflow-y: auto; outline: none; }
+.modal--about .modal__card { width: calc(1180 * var(--m)); height: auto; --h: auto; outline: none; }
+.modal--about .about { max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.modal--about .about::-webkit-scrollbar { display: none; }
 .about { padding: calc(96 * var(--m)); display: flex; align-items: center; gap: calc(72 * var(--m)); }
 .about__photo { flex: none; display: block; width: calc(400 * var(--m)); height: auto; aspect-ratio: 768 / 1024; object-fit: cover; border-radius: calc(48 * var(--m)); background: var(--cover-ph); }
 .about__text { display: flex; flex-direction: column; gap: 16px; min-width: 0; padding-right: calc(24 * var(--m)); }
@@ -559,3 +559,7 @@ body.has-modal { overflow: hidden; }
   .about p { font-size: 15px; }
 }
 }
+
+/* the X stays in the top right corner of every overlay while its content scrolls, without the grey ring */
+.modal__close { z-index: 5; }
+.modal__close svg rect, .modal__close:hover svg rect { stroke: transparent; }
