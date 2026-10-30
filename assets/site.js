@@ -419,7 +419,9 @@ try {
   const t = document.getElementById('nw');
   if (!t) return;
   const cards = [...t.querySelectorAll('.stk__card')], reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  let order = cards.slice(), busy = false, drag = null, swiped = false;
+  /* the stack opens with the yellow card on top, the others follow in their usual order */
+  const first = Math.max(0, cards.findIndex(c => c.dataset.name === 'Gelb'));
+  let order = cards.slice(first).concat(cards.slice(0, first)), busy = false, drag = null, swiped = false;
   const label = () => t.setAttribute('aria-label', 'Kartenstapel mit Kölschem Grundgesetz, oben ' + order[0].dataset.name +
     (order[0].classList.contains('is-flipped') ? ', Rückseite: ' + order[0].querySelector('.stk__text').textContent + ' Klicken legt die Karte weg' : '. Klicken dreht die Karte um, Wischen legt sie weg'));
   const place = () => {
