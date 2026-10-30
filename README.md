@@ -5,6 +5,7 @@ Statische Seite (HTML, CSS, JavaScript). Kein Build-Schritt nötig.
 ## Inhalt
 - `index.html` – die Seite
 - `kadenz-prototyp.html` – der Kadenz-Prototyp; läuft in der iPhone-Kachel und im Overlay von selbst ab
+- `wide-prototyp.html` – der wide-Prototyp auf dem iPad; läuft in der breiten Kachel von selbst ab (`#embed`), Klick öffnet die Seite mit Steuerung
 - `assets/` – alle Bilder
 - `favicon.svg`, `apple-touch-icon.png` – Icons
 - `og-image.jpg` – Vorschaubild für Link-Vorschauen
@@ -20,4 +21,4 @@ Vercel ist mit dem Repo verbunden und stellt die neue Version nach dem Commit vo
 
 ## Schrift
 Die Seite nutzt „Akkurat LL“, falls auf dem Gerät installiert, sonst Hanken Grotesk (Google Fonts).
-Der Kadenz-Prototyp lädt Geist und Archivo über Google Fonts.
+Der Kadenz-Prototyp lädt Geist und Archivo über Google Fonts, der wide-Prototyp Instrument Sans.
