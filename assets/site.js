@@ -785,3 +785,19 @@ try {
   new IntersectionObserver(es => es.forEach(e => t.classList.toggle('is-running', e.isIntersecting)), { threshold: 0.35 }).observe(t);
 })();
 } catch (e) { console.error(e); }
+
+try {
+/* Heads tile: a click shows the next drawn look in a fixed order and starts over after the last */
+(() => {
+  const t = document.getElementById('heads');
+  if (!t) return;
+  const heads = [...t.querySelectorAll('.head')];
+  let i = 0;
+  t.addEventListener('click', () => {
+    heads[i].classList.remove('is-on');
+    i = (i + 1) % heads.length;
+    heads[i].classList.add('is-on');
+    t.setAttribute('aria-label', 'Gezeichneter Olivier ' + heads[i].dataset.name + '. Klicken zeigt den nächsten Look');
+  });
+})();
+} catch (e) { console.error(e); }

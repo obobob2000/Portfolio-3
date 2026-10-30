@@ -615,3 +615,15 @@ body.has-modal { overflow: hidden; }
   .ticker__track { animation-duration: 70s; }
 }
 @media (prefers-reduced-motion: reduce) { .ticker__track, .ticker__star { animation: none; } }
+
+/* Heads tile: one drawn head at a time on a darker orange gradient; a click swaps to the next look (hair, cap, bald, bald with glasses) */
+.tile--heads { padding: 0; border: 0; width: 100%; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  background: linear-gradient(165deg, #e8912b 0%, #d6761a 55%, #bd5c0d 100%); }
+.tile--heads:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+.head { position: absolute; left: 14%; bottom: 0; width: 72%; height: auto; display: block; pointer-events: none; user-select: none;
+  opacity: 0; transform-origin: 50% 100%; transform: translateY(6%) scale(.94);
+  transition: opacity .3s ease, transform .55s cubic-bezier(.2,.9,.3,1.25); }
+.head.is-on { opacity: 1; transform: none; }
+@media (hover: hover) { .tile--heads:hover .head.is-on { transform: scale(1.05); } }
+@media (max-width: 800px) { .tile--heads { border-radius: 11% / 11%; } }
+@media (prefers-reduced-motion: reduce) { .head { transition: opacity .2s ease; transform: none; } }
