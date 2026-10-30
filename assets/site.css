@@ -513,13 +513,11 @@ body.has-modal { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-/* wide: double-width orange tile like the deck slide – a large iPad running a short loop, cut off by the bottom edge, a vertical word on the right */
+/* wide: double-width orange tile like the deck slide – a large iPad running a short loop, cut off by the bottom edge */
 .tile--wide { grid-column: span 2; display: block; color: #fff; text-decoration: none;
   background: linear-gradient(135deg, #ff8a00 0%, #ff7a00 45%, #ff4a00 100%); }
 .wd__device { position: absolute; left: 12%; top: calc(52 * var(--u)); width: 62%; pointer-events: none; }
 .wd__video { display: block; width: 100%; height: auto; aspect-ratio: 1280 / 971; background: transparent; }
-.wd__word { position: absolute; right: calc(34 * var(--u)); top: 50%; translate: 0 -50%; writing-mode: vertical-rl; rotate: 180deg;
-  font: 700 calc(64 * var(--u))/1 var(--font-display); letter-spacing: -.01em; color: rgba(255, 226, 200, .75); white-space: nowrap; pointer-events: none; }
 .wd__more { position: absolute; left: calc(40 * var(--u)); bottom: calc(40 * var(--u)); z-index: 3; pointer-events: none; color: #fff; background: rgba(255, 106, 0, .55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-color: rgba(255, 255, 255, .5); }
 .tile--wide:hover .wd__more, .tile--wide:has(.tile__hit:focus-visible) .wd__more { border-color: #fff; }
 .tile--wide:hover .wd__more .covers__arrow { width: 10px; margin-left: 6px; }
@@ -528,7 +526,6 @@ body.has-modal { overflow: hidden; }
 @media (max-width: 800px) {
   .tile--wide { grid-column: auto; aspect-ratio: 1 / 1; }
   .wd__device { left: 8%; top: 9%; width: 108%; }
-  .wd__word { display: none; }
   .wd__more { left: 16px; bottom: 16px; }
 }
 /* wide overlay: the first state fills the first view, the other states follow one per row */
