@@ -616,11 +616,11 @@ body.has-modal { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .ticker__track, .ticker__star { animation: none; } }
 
-/* Heads tile: one drawn head at a time on a darker orange gradient; a click swaps to the next look (hair, cap, bald, bald with glasses) */
+/* Heads tile: one drawn head at a time on a light blue gradient; a click swaps to the next look (hair, cap, bald, bald with glasses) */
 .tile--heads { padding: 0; border: 0; width: 100%; cursor: pointer; -webkit-tap-highlight-color: transparent;
-  background: linear-gradient(165deg, #e8912b 0%, #d6761a 55%, #bd5c0d 100%); }
+  background: linear-gradient(165deg, #dcecfb 0%, #c4ddf5 100%); }
 .tile--heads:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.head { position: absolute; left: 4%; bottom: 0; width: 92%; height: auto; display: block; pointer-events: none; user-select: none;
+.head { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block; pointer-events: none; user-select: none;
   visibility: hidden; transform-origin: 50% 100%; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
 .head.is-on { visibility: visible; }
 .head.is-pop { animation: head-pop .32s cubic-bezier(.3,1.6,.5,1); }
