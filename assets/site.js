@@ -794,9 +794,10 @@ try {
   const heads = [...t.querySelectorAll('.head')];
   let i = 0;
   t.addEventListener('click', () => {
-    heads[i].classList.remove('is-on');
+    heads[i].classList.remove('is-on', 'is-pop');
     i = (i + 1) % heads.length;
-    heads[i].classList.add('is-on');
+    heads[i].classList.remove('is-pop'); void heads[i].offsetWidth;
+    heads[i].classList.add('is-on', 'is-pop');
     t.setAttribute('aria-label', 'Gezeichneter Olivier ' + heads[i].dataset.name + '. Klicken zeigt den nächsten Look');
   });
 })();

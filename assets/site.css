@@ -621,9 +621,16 @@ body.has-modal { overflow: hidden; }
   background: linear-gradient(165deg, #e8912b 0%, #d6761a 55%, #bd5c0d 100%); }
 .tile--heads:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
 .head { position: absolute; left: 14%; bottom: 0; width: 72%; height: auto; display: block; pointer-events: none; user-select: none;
-  opacity: 0; transform-origin: 50% 100%; transform: translateY(6%) scale(.94);
-  transition: opacity .3s ease, transform .55s cubic-bezier(.2,.9,.3,1.25); }
-.head.is-on { opacity: 1; transform: none; }
+  visibility: hidden; transform-origin: 50% 100%; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+.head.is-on { visibility: visible; }
+.head.is-pop { animation: head-pop .32s cubic-bezier(.3,1.6,.5,1); }
+@keyframes head-pop { 0% { transform: scale(.9); } 100% { transform: none; } }
 @media (hover: hover) { .tile--heads:hover .head.is-on { transform: scale(1.05); } }
 @media (max-width: 800px) { .tile--heads { border-radius: 11% / 11%; } }
-@media (prefers-reduced-motion: reduce) { .head { transition: opacity .2s ease; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .head.is-pop { animation: none; } }
+
+/* Overlays: the page blurs first, then the card comes in – quicker than before */
+.modal { transition: opacity .18s ease, visibility 0s linear .2s; }
+.modal.is-open { transition: opacity .18s ease; }
+.modal__card { opacity: 0; transition: transform .14s ease, opacity .12s ease; }
+.modal.is-open .modal__card { opacity: 1; transition: transform .3s cubic-bezier(.2,.9,.25,1) .14s, opacity .2s ease .14s; }
