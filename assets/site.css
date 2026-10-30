@@ -381,7 +381,7 @@ body { margin: 0; color: var(--ink-muted); font-family: var(--font-ui); -webkit-
 .covers__name:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 .covers__name.is-changing { opacity: 0; }
 
-.tile--salut { background: var(--tile-sky); flex-direction: column; gap: calc(30 * var(--u)); }
+.tile--salut { background: var(--tile-salut); flex-direction: column; gap: calc(30 * var(--u)); }
 .photos { position: relative; width: calc(295.33 * var(--u)); aspect-ratio: 231 / 256.4; max-width: 100%;
   padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .photos:focus-visible { outline: 2px solid var(--salut); outline-offset: 8px; border-radius: 8px; }
@@ -587,3 +587,8 @@ body.has-modal { overflow: hidden; }
 .wd-steps li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: stretch; width: auto; }
 .wd-step--full .wd-step__panel img { width: 100%; }
 .wd-step:last-child .wd-step__panel img { width: 78%; }
+
+/* Salut tile: a warm sand instead of the light blue, so it no longer matches the playlist tile next to it */
+:root { --tile-salut: #f5ede3; --salut: #c2611f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --tile-salut: #1f1913; --salut: #f0a46a; } }
+:root[data-theme="dark"] { --tile-salut: #1f1913; --salut: #f0a46a; }
