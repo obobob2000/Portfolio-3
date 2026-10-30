@@ -595,7 +595,7 @@ body.has-modal { overflow: hidden; }
 
 /* Big running type above the footer: one line of large display type that drifts left in an endless loop, every second phrase as an outline */
 .ticker { display: block; text-decoration: none; cursor: pointer; overflow: hidden; padding-block: calc(20 * var(--u)); margin-block: calc(20 * var(--u)) calc(-20 * var(--u)); }
-.ticker__track { display: flex; width: max-content; animation: ticker 48s linear infinite; }
+.ticker__track { display: flex; width: max-content; animation: ticker 110s linear infinite; }
 .ticker:hover .ticker__track, .ticker:focus-visible .ticker__track { animation-play-state: paused; }
 .ticker:focus-visible { outline: 2px solid var(--blue); outline-offset: -4px; }
 .ticker:hover .ticker__word--line { color: var(--pill-bg); }
@@ -611,6 +611,6 @@ body.has-modal { overflow: hidden; }
   .ticker__word { font-size: 64px; padding-inline: 16px; }
   .ticker__word--line { -webkit-text-stroke-width: 1.5px; }
   .ticker__star { width: 40px; }
-  .ticker__track { animation-duration: 30s; }
+  .ticker__track { animation-duration: 70s; }
 }
 @media (prefers-reduced-motion: reduce) { .ticker__track, .ticker__star { animation: none; } }
