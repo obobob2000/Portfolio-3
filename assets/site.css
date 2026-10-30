@@ -518,15 +518,10 @@ body.has-modal { overflow: hidden; }
   background: linear-gradient(135deg, #ff8a00 0%, #ff7a00 45%, #ff4a00 100%); }
 .wd__device { position: absolute; left: 12%; top: calc(52 * var(--u)); width: 62%; pointer-events: none; }
 .wd__video { display: block; width: 100%; height: auto; aspect-ratio: 1280 / 971; background: transparent; }
-.wd__more { position: absolute; left: calc(40 * var(--u)); bottom: calc(40 * var(--u)); z-index: 3; pointer-events: none; color: #fff; background: rgba(255, 106, 0, .55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-color: rgba(255, 255, 255, .5); }
-.tile--wide:hover .wd__more, .tile--wide:has(.tile__hit:focus-visible) .wd__more { border-color: #fff; }
-.tile--wide:hover .wd__more .covers__arrow { width: 10px; margin-left: 6px; }
-.tile--wide:hover .wd__more .covers__arrow svg { opacity: 1; transform: none; }
 .tile--wide .tile__hit { z-index: 2; }
 @media (max-width: 800px) {
   .tile--wide { grid-column: auto; aspect-ratio: 1 / 1; }
   .wd__device { left: 8%; top: 9%; width: 108%; }
-  .wd__more { left: 16px; bottom: 16px; }
 }
 /* wide overlay: the first state fills the first view, the other states follow one per row */
 .modal__ipad { display: block; width: calc(740 * var(--m)); height: auto; aspect-ratio: 1600 / 1213; }
