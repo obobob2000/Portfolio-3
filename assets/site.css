@@ -620,7 +620,7 @@ body.has-modal { overflow: hidden; }
 .tile--heads { padding: 0; border: 0; width: 100%; cursor: pointer; -webkit-tap-highlight-color: transparent;
   background: linear-gradient(165deg, #e8912b 0%, #d6761a 55%, #bd5c0d 100%); }
 .tile--heads:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.head { position: absolute; left: 14%; bottom: 0; width: 72%; height: auto; display: block; pointer-events: none; user-select: none;
+.head { position: absolute; left: 4%; bottom: 0; width: 92%; height: auto; display: block; pointer-events: none; user-select: none;
   visibility: hidden; transform-origin: 50% 100%; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
 .head.is-on { visibility: visible; }
 .head.is-pop { animation: head-pop .32s cubic-bezier(.3,1.6,.5,1); }
