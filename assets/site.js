@@ -787,29 +787,29 @@ try {
 } catch (e) { console.error(e); }
 
 try {
-/* Avatar tile: a click turns the whole stack like a cube and brings the next complete look (hair, face and shirt together) */
+/* Avatar tile: a click turns the cube a quarter and the next complete look comes round */
 (() => {
   const t = document.getElementById('mm');
   if (!t) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const size = () => t.style.setProperty('--tw', t.clientWidth + 'px');
   size(); new ResizeObserver(size).observe(t);
-  const looks = t.dataset.looks.split('|').map(l => l.split(',')), names = t.dataset.names.split('|');
-  looks.slice(1).flat().forEach(src => { const i = new Image(); i.src = src; });
-  const rows = [...t.querySelectorAll('.mm__band')].map(b => ({ cube: b.querySelector('.mm__cube'), front: b.querySelector('.mm__face--front'), side: b.querySelector('.mm__face--side') }));
+  const looks = t.dataset.looks.split('|'), names = t.dataset.names.split('|');
+  looks.slice(1).forEach(src => { const i = new Image(); i.src = src; });
+  const cube = t.querySelector('.mm__cube'), front = t.querySelector('.mm__face--front'), side = t.querySelector('.mm__face--side');
   let i = 0, busy = false;
+  const done = () => {
+    front.style.backgroundImage = side.style.backgroundImage;
+    cube.style.transition = 'none'; cube.classList.remove('is-turning'); void cube.offsetWidth; cube.style.transition = '';
+    busy = false;
+  };
   t.addEventListener('click', () => {
     if (busy) return;
     i = (i + 1) % looks.length;
-    rows.forEach((r, k) => { r.side.style.backgroundImage = 'url(' + looks[i][k] + ')'; });
+    side.style.backgroundImage = 'url(' + looks[i] + ')';
     t.setAttribute('aria-label', 'Gezeichneter Olivier ' + names[i] + '. Klicken zeigt den nächsten Look');
-    const done = () => rows.forEach(r => {
-      r.front.style.backgroundImage = r.side.style.backgroundImage;
-      r.cube.style.transition = 'none'; r.cube.classList.remove('is-turning'); void r.cube.offsetWidth; r.cube.style.transition = '';
-    });
     if (reduce.matches) { done(); return; }
-    busy = true; rows.forEach(r => r.cube.classList.add('is-turning'));
-    setTimeout(() => { done(); busy = false; }, 570);
+    busy = true; cube.classList.add('is-turning'); setTimeout(done, 570);
   });
 })();
 } catch (e) { console.error(e); }

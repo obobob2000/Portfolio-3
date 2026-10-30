@@ -616,24 +616,15 @@ body.has-modal { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .ticker__track, .ticker__star { animation: none; } }
 
-/* Mix-and-match tile, cut into three rows like a flip book: hair, face, shirt. A click turns that row a quarter like a Rubik's cube layer and shows the next option */
-.tile--mm { display: block; padding: 0; border: 0; width: 100%; cursor: pointer; background: #c4ddf5; --tw: 550px; -webkit-tap-highlight-color: transparent; }
+/* Avatar tile: one drawn look on each side of a cube; a click turns the cube a quarter and the next look comes round */
+.tile--mm { display: block; padding: 0; border: 0; width: 100%; cursor: pointer; background: #c4ddf5; --tw: 550px; perspective: calc(var(--tw) * 2.6); -webkit-tap-highlight-color: transparent; }
 .tile--mm:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.mm__stage { position: absolute; inset: 0; }
-.mm__band { position: absolute; left: 0; width: 100%; perspective: calc(var(--tw) * 2.6); }
-.mm__band--hair { top: 0; height: 38.81%; z-index: 3; }
-.mm__band--face { top: 38.81%; height: 41.78%; z-index: 2; }
-.mm__band--shirt { top: 80.59%; bottom: 0; z-index: 1; }
 .mm__cube { position: absolute; inset: 0; transform-style: preserve-3d; transform: translateZ(calc(var(--tw) * -.5)); }
 .mm__cube.is-turning { transition: transform .55s cubic-bezier(.55,.05,.25,1); transform: translateZ(calc(var(--tw) * -.5)) rotateY(-90deg); }
-.mm__face { position: absolute; inset: 0; backface-visibility: hidden; background-repeat: no-repeat; background-size: var(--tw) var(--tw); }
+.mm__face { position: absolute; inset: 0; backface-visibility: hidden; background: #c4ddf5 no-repeat center / cover; }
 .mm__face--front { transform: translateZ(calc(var(--tw) * .5)); }
-.mm__face--side { transform: rotateY(90deg) translateZ(calc(var(--tw) * .5)); }
-.mm__band--hair .mm__face { background-position: 0 0; }
-.mm__band--face .mm__face { background-position: 0 calc(var(--tw) * -.3881); }
-.mm__band--shirt .mm__face { background-position: 0 calc(var(--tw) * -.8059); }
+.mm__face--side { transform: rotateY(90deg) translateZ(calc(var(--tw) * .5)); filter: brightness(.82); }
 .mm__cube.is-turning .mm__face--front { filter: brightness(.82); transition: filter .55s ease; }
-.mm__cube .mm__face--side { filter: brightness(.82); }
 .mm__cube.is-turning .mm__face--side { filter: none; transition: filter .55s ease; }
 @media (max-width: 800px) { .tile--mm { border-radius: 11% / 11%; } }
 
