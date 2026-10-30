@@ -515,7 +515,7 @@ body.has-modal { overflow: hidden; }
 
 /* wide: double-width orange tile like the deck slide – a large iPad running a short loop, cut off by the bottom edge */
 .tile--wide { grid-column: span 2; display: block; color: #fff; text-decoration: none;
-  background: linear-gradient(135deg, #ff8a00 0%, #ff7a00 45%, #ff4a00 100%); }
+  background: linear-gradient(150deg, #ff7c06 0%, #ff7505 30%, #fe5206 68%, #fe3405 100%); }
 .wd__device { position: absolute; left: 19%; top: calc(52 * var(--u)); width: 62%; pointer-events: none; transform-origin: 50% 0; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
 @media (hover: hover) { .tile--wide:hover .wd__device { transform: scale(1.04); } }
 .wd__video { display: block; width: 100%; height: auto; aspect-ratio: 1280 / 971; background: transparent; }
