@@ -293,7 +293,7 @@ const hm=x=>{const h=Math.floor(x),m=Math.round((x-h)*60);return String(h).padSt
 const dur=x=>{const h=Math.floor(x+1e-6),m=Math.round((x-h)*60);return (h?h+'h':'')+(h&&m?' ':'')+(m?m+'m':'')||'0h'};
 let entries=[],run=0;
 
-function wait(ms){const r=run;return new Promise((res,rej)=>setTimeout(()=>r===run?res():rej('stop'),ms*0.8));}
+function wait(ms){const r=run;return new Promise((res,rej)=>setTimeout(()=>r===run?res():rej('stop'),ms*0.762));}
 function pos(el){const s=stage.getBoundingClientRect(),b=el.getBoundingClientRect(),k=s.width/1560;return{x:(b.left-s.left+b.width/2)/k,y:(b.top-s.top+b.height/2)/k};}
 const tap=$('tap');
 async function moveTo(el,dx=0,dy=0){const p=pos(el);tap.style.opacity=1;tap.style.left=(p.x+dx)+'px';tap.style.top=(p.y+dy)+'px';await wait(800);}
