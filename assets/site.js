@@ -699,3 +699,46 @@ try {
   }, { threshold: .2 }).observe(tile);
 })();
 } catch (e) { console.error(e); }
+
+try {
+/* wide overlay: same card as Kadenz, but only still screens – the first fills the first view, the arrow hops to the rest */
+(() => {
+  const modal = document.getElementById('wide-modal'), opener = document.getElementById('wide');
+  if (!modal || !opener) return;
+  const closeBtn = modal.querySelector('.modal__close'), card = modal.querySelector('.modal__card');
+  const scroller = modal.querySelector('.modal__scroll'), more = modal.querySelector('.modal__more');
+  scroller.addEventListener('scroll', () => card.classList.toggle('is-scrolled', scroller.scrollTop > 24), { passive: true });
+  more.addEventListener('click', () => {
+    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scroller.scrollTo({ top: modal.querySelector('.modal__screens').offsetTop - 24, behavior: smooth ? 'smooth' : 'auto' });
+  });
+  let hint = 0;
+  const open = () => {
+    clearTimeout(hint); card.classList.remove('is-hinting');
+    hint = setTimeout(() => card.classList.add('is-hinting'), 2000);
+    modal.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
+    scroller.scrollTop = 0; card.classList.remove('is-scrolled');
+    modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('has-modal');
+    closeBtn.focus({ preventScroll: true });
+  };
+  const close = () => {
+    if (!modal.classList.contains('is-open')) return;
+    clearTimeout(hint); card.classList.remove('is-hinting');
+    modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('has-modal');
+    opener.focus({ preventScroll: true });
+  };
+  opener.addEventListener('click', open);
+  modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
+  document.addEventListener('keydown', e => {
+    if (!modal.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'Tab') {
+      const stops = card.classList.contains('is-scrolled') ? [closeBtn, scroller] : [closeBtn, more, scroller];
+      const at = stops.indexOf(document.activeElement);
+      e.preventDefault(); stops[(at + (e.shiftKey ? stops.length - 1 : 1)) % stops.length].focus({ preventScroll: true });
+    }
+  });
+})();
+} catch (e) { console.error(e); }
