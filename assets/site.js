@@ -752,6 +752,7 @@ try {
   let byKey = false;
   const open = e => {
     e.preventDefault();
+    modal.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
     modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('has-modal');
     (byKey || e.detail === 0 ? closeBtn : card).focus({ preventScroll: true }); byKey = false;

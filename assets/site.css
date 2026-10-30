@@ -544,13 +544,18 @@ body.has-modal { overflow: hidden; }
 .modal__close { background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
   box-shadow: inset 0 1px 0 var(--glass-edge), 0 4px 14px rgba(0, 0, 0, .12); }
 
-/* About overlay: opened by the name in the header – a short introduction on the same card as the other overlays */
-.modal--about .modal__card { width: calc(800 * var(--m)); height: auto; --h: auto; max-height: calc(100dvh - 32px); overflow-y: auto; outline: none; }
-.about { padding: calc(110 * var(--m)) calc(96 * var(--m)) calc(96 * var(--m)); display: flex; flex-direction: column; gap: 16px; }
-.about__title { margin: 0 0 8px; font: 700 22px/1.2 var(--font-display); color: var(--pill-bg); }
+/* About overlay: opened by the name in the header – photo and a short introduction side by side, stacked on phones */
+.modal--about .modal__card { width: calc(1180 * var(--m)); height: auto; --h: auto; max-height: calc(100dvh - 32px); overflow-y: auto; outline: none; }
+.about { padding: calc(96 * var(--m)); display: flex; align-items: center; gap: calc(72 * var(--m)); }
+.about__photo { flex: none; display: block; width: calc(400 * var(--m)); height: auto; aspect-ratio: 768 / 1024; object-fit: cover; border-radius: calc(48 * var(--m)); background: var(--cover-ph); }
+.about__text { display: flex; flex-direction: column; gap: 16px; min-width: 0; padding-right: calc(24 * var(--m)); }
+.about__title { margin: 0 0 8px; font: 700 26px/1.2 var(--font-display); color: var(--pill-bg); }
 .about p { margin: 0; font-size: 16px; line-height: 1.55; color: var(--ink-muted); max-width: 60ch; }
 @media (max-width: 800px) {
   .modal--about .modal__card { width: var(--s); --edge: 16px; }
-  .about { padding: 64px 28px 32px; }
+  .about { flex-direction: column; align-items: stretch; padding: 64px 24px 28px; gap: 24px; }
+  .about__photo { width: 100%; aspect-ratio: 4 / 4.2; border-radius: 20px; }
+  .about__text { padding-right: 0; }
   .about p { font-size: 15px; }
+}
 }
