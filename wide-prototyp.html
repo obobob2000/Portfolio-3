@@ -372,7 +372,7 @@ function reset(){entries=[];counters.delete($('erf'));$('erf').textContent='0h e
   stage.querySelectorAll('.chip').forEach(c=>c.classList.remove('used'));stage.querySelectorAll('.f').forEach(f=>f.classList.remove('focus'));
   $('next').className='next';$('status').textContent='Dein Tag startet um 8:00';render();
   tap.style.transition='none';tap.style.opacity=0;const p=pos($('cI'));tap.style.left=(p.x+120)+'px';tap.style.top=(p.y+160)+'px';void tap.offsetWidth;tap.style.transition='';
-  [...stage.querySelectorAll('.win-in>*')].forEach((el,i)=>{el.style.animation='none';void el.offsetWidth;el.style.animation=`up .6s ${i*90}ms cubic-bezier(.2,.8,.2,1) both`;});
+  if(!reset.quiet)[...stage.querySelectorAll('.win-in>*')].forEach((el,i)=>{el.style.animation='none';void el.offsetWidth;el.style.animation=`up .6s ${i*90}ms cubic-bezier(.2,.8,.2,1) both`;});
 }
 
 async function play(){
@@ -392,12 +392,21 @@ async function play(){
   await click(n);tap.style.opacity=0;$('veil').style.opacity=1;await wait(600);
 }
 
+async function playShort(){
+  window.__runs=(window.__runs||0)+1;
+  reset.quiet=true;reset();reset.quiet=false;entries.push(E.i);render();$('cI').classList.add('used');
+  $('veil').style.opacity=0;await wait(1300);
+  await click($('cA'));$('cA').classList.add('sel');await fill('Kunde A','Design',8.5,11.5,E.a.note);await wait(250);await add('a',$('cA'));
+  await click($('cM'));$('cM').classList.add('sel');await fill('Pause',null,12,13);await wait(200);await add('m',$('cM'));
+  await wait(500);tap.style.opacity=0;await wait(300);$('veil').style.opacity=1;await wait(650);
+}
+const SHORT=location.hash==='#short';
 let auto=true;
-async function loop(){const r=++run;try{do{await play();}while(auto&&r===run);}catch(e){}}
+async function loop(){const r=++run;try{do{await (SHORT?playShort():play());}while(auto&&r===run);}catch(e){}}
 const ab=document.getElementById('auto');
 ab.onclick=()=>{auto=!auto;ab.setAttribute('aria-pressed',auto);if(auto)loop();};
 document.getElementById('restart').onclick=()=>loop();
-function mode(){const h=location.hash.slice(1);const e=h==='embed'||h==='embedauto'||h==='video';document.body.classList.toggle('embed',e);document.documentElement.classList.toggle('embed',e);fit();}
+function mode(){const h=location.hash.slice(1);const e=h==='embed'||h==='embedauto'||h==='video'||h==='short';document.body.classList.toggle('embed',e);document.documentElement.classList.toggle('embed',e);fit();}
 window.addEventListener('hashchange',mode);mode();
 (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(loop,200));
 })();
