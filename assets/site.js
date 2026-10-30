@@ -787,18 +787,32 @@ try {
 } catch (e) { console.error(e); }
 
 try {
-/* Mix-and-match tile: hair, face and shirt each have their own click area and cycle through their options independently */
+/* Mix-and-match tile: each row is a cube layer; a click turns it a quarter to the left and the next option comes round */
 (() => {
   const t = document.getElementById('mm');
   if (!t) return;
-  const LABEL = { hair: 'Frisur', face: 'Gesicht', shirt: 'Shirt' };
-  t.querySelectorAll('.mm__hit').forEach(btn => btn.addEventListener('click', () => {
-    const set = t.querySelector('.mm__set[data-part="' + btn.dataset.part + '"]'), opts = [...set.children];
-    const i = (+set.dataset.i + 1) % opts.length;
-    opts.forEach(o => o.classList.remove('is-on', 'is-pop'));
-    void set.offsetWidth;
-    opts[i].classList.add('is-on', 'is-pop'); set.dataset.i = i;
-    btn.setAttribute('aria-label', LABEL[btn.dataset.part] + ' wechseln, jetzt: ' + opts[i].dataset.name);
-  }));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const size = () => t.style.setProperty('--tw', t.clientWidth + 'px');
+  size(); new ResizeObserver(size).observe(t);
+  t.querySelectorAll('.mm__band').forEach(band => {
+    const imgs = band.dataset.imgs.split('|'), names = band.dataset.names.split('|');
+    const cube = band.querySelector('.mm__cube'), front = band.querySelector('.mm__face--front'), side = band.querySelector('.mm__face--side');
+    imgs.slice(1).forEach(src => { const i = new Image(); i.src = src; });   // preload so the turn never shows an empty side
+    let i = 0, busy = false;
+    const done = () => {
+      front.style.backgroundImage = side.style.backgroundImage;
+      cube.style.transition = 'none'; cube.classList.remove('is-turning'); void cube.offsetWidth; cube.style.transition = '';
+      busy = false;
+    };
+    band.addEventListener('click', () => {
+      if (busy) return;
+      i = (i + 1) % imgs.length;
+      side.style.backgroundImage = 'url(' + imgs[i] + ')';
+      band.setAttribute('aria-label', band.dataset.label + ' wechseln, jetzt: ' + names[i]);
+      if (reduce.matches) { done(); return; }
+      busy = true; cube.classList.add('is-turning');
+      setTimeout(done, 570);
+    });
+  });
 })();
 } catch (e) { console.error(e); }
