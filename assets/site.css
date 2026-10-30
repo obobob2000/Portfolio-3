@@ -616,17 +616,6 @@ body.has-modal { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .ticker__track, .ticker__star { animation: none; } }
 
-/* Avatar tile: one drawn look on each side of a cube; a click turns the cube a quarter and the next look comes round */
-.tile--mm { display: block; padding: 0; border: 0; width: 100%; cursor: pointer; background: #c4ddf5; --tw: 550px; perspective: calc(var(--tw) * 2.6); -webkit-tap-highlight-color: transparent; }
-.tile--mm:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-.mm__cube { position: absolute; inset: 0; transform-style: preserve-3d; transform: translateZ(calc(var(--tw) * -.5)); }
-.mm__cube.is-turning { transition: transform .55s cubic-bezier(.55,.05,.25,1); transform: translateZ(calc(var(--tw) * -.5)) rotateY(-90deg); }
-.mm__face { position: absolute; inset: 0; backface-visibility: hidden; background: #c4ddf5 no-repeat center / cover; }
-.mm__face--front { transform: translateZ(calc(var(--tw) * .5)); }
-.mm__face--side { transform: rotateY(90deg) translateZ(calc(var(--tw) * .5)); filter: brightness(.82); }
-.mm__cube.is-turning .mm__face--front { filter: brightness(.82); transition: filter .55s ease; }
-.mm__cube.is-turning .mm__face--side { filter: none; transition: filter .55s ease; }
-@media (max-width: 800px) { .tile--mm { border-radius: 11% / 11%; } }
 
 /* Overlays: the page blurs first, then the card comes in – quicker than before */
 .modal { transition: opacity .18s ease, visibility 0s linear .2s; }
