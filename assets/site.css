@@ -588,7 +588,7 @@ body.has-modal { overflow: hidden; }
 .wd-step--full .wd-step__panel img { width: 100%; }
 .wd-step:last-child .wd-step__panel img { width: 78%; }
 
-/* Salut tile: a soft sage green, so it stands apart from the cream / tinted playlist tile and the blue tiles */
-:root { --tile-salut: #e6eee2; --salut: #4f7a47; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --tile-salut: #151b14; --salut: #93c288; } }
-:root[data-theme="dark"] { --tile-salut: #151b14; --salut: #93c288; }
+/* Salut tile: dark grey, so the black-and-white photos stand out and it no longer matches the light tiles around it */
+:root { --tile-salut: #2a2a2e; --salut: #f2f2f2; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --tile-salut: #232327; --salut: #f2f2f2; } }
+:root[data-theme="dark"] { --tile-salut: #232327; --salut: #f2f2f2; }
